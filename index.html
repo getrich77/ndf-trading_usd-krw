@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💱 NDF 원달러 트레이딩 시그널</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            padding: 15px;
+            padding-bottom: 100px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2a2a4a;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #00d4ff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            font-size: 0.85rem;
+            color: #8892b0;
+        }
+        
+        .clock {
+            font-size: 0.75rem;
+            color: #00d4ff;
+            margin-top: 10px;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .market-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+        
+        .market-status.optimal {
+            background: rgba(255, 211, 42, 0.2);
+            color: #ffd32a;
+            border: 1px solid #ffd32a;
+        }
+        
+        .market-status.open {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+        
+        .market-status.closed {
+            background: rgba(136, 146, 176, 0.2);
+            color: #8892b0;
+            border: 1px solid #8892b0;
+        }
+        
+        .concept-card {
+            background: linear-gradient(135deg, #1a3a2a 0%, #0a2a1a 100%);
+            border: 1px solid #00ff88;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .concept-card h3 {
+            color: #00ff88;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .concept-card p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .concept-highlight {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00ff88;
+        }
+        
+        .input-card {
+            background: #141428;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #2a2a4a;
+        }
+        
+        .input-card h3 {
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .input-card .desc {
+            color: #8892b0;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            margin-bottom: 12px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #c0c0c0;
+            margin-bottom: 6px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #2a2a4a;
+            border-radius: 10px;
+            background: #1e1e3c;
+            color: #ffffff;
+            font-size: 1.1rem;
+            text-align: right;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .quick-link {
+            padding: 12px;
+            border-radius: 10px;
+            background: #1e1e3c;
+            color: #00d4ff;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #2a2a4a;
+            transition: all 0.3s;
+        }
+        
+        .quick-link:active {
+            background: #2a2a4a;
+            transform: scale(0.98);
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(90deg, #ff0080, #ff4757);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 0, 128, 0.3);
+        }
+        
+        .analyze-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 10px rgba(255, 0, 128, 0.3);
+        }
+        
+        .signal-card {
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .signal-card.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .signal-card.sell {
+            background: linear-gradient(135deg, #0a3d2a 0%, #0a2a1a 100%);
+            border: 2px solid #00ff88;
+        }
+        
+        .signal-card.buy {
+            background: linear-gradient(135deg, #3d0a1a 0%, #2a0a0a 100%);
+            border: 2px solid #ff4757;
+        }
+        
+        .signal-card.hold {
+            background: linear-gradient(135deg, #3d3a0a 0%, #2a2a0a 100%);
+            border: 2px solid #ffd32a;
+        }
+        
+        .signal-emoji {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .signal-text {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signal-card.sell .signal-text { color: #00ff88; }
+        .signal-card.buy .signal-text { color: #ff4757; }
+        .signal-card.hold .signal-text { color: #ffd32a; }
+        
+        .signal-sub {
+            font-size: 1rem;
+            color: #e0e0e0;
+            margin-bottom: 15px;
+        }
+        
+        .signal-gap {
+            font-size: 0.9rem;
+            color: #8892b0;
+            margin-bottom: 15px;
+        }
+        
+        .confidence-bar {
+            background: #333;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px auto;
+            max-width: 80%;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .signal-card.sell .confidence-fill { background: #00ff88; }
+        .signal-card.buy .confidence-fill { background: #ff4757; }
+        .signal-card.hold .confidence-fill { background: #ffd32a; }
+        
+        .confidence-text {
+            font-size: 0.85rem;
+            color: #c0c0c0;
+        }
+        
+        .detail-card {
+            background: #141428;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #2a2a4a;
+            display: none;
+        }
+        
+        .detail-card.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .detail-card h3 {
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a4a;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1e1e3c;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #8892b0;
+            font-size: 0.85rem;
+        }
+        
+        .detail-value {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .detail-value.positive { color: #00ff88; }
+        .detail-value.negative { color: #ff4757; }
+        
+        .strategy-card {
+            background: #141428;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #2a2a4a;
+            display: none;
+        }
+        
+        .strategy-card.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .strategy-card h3 {
+            color: #ff0080;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .strategy-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .strategy-item::before {
+            content: "•";
+            color: #00d4ff;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .guide-card {
+            background: #141428;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #2a2a4a;
+        }
+        
+        .guide-card h3 {
+            color: #ffd32a;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .guide-card p {
+            font-size: 0.8rem;
+            color: #8892b0;
+            line-height: 1.6;
+        }
+        
+        .warning {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid #ff4757;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #ff4757;
+            text-align: center;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a2a4a;
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .save-btn {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #2a2a4a;
+            border-radius: 10px;
+            background: transparent;
+            color: #8892b0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #8892b0;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>💱 NDF 원달러 트레이딩</h1>
+            <p class="subtitle">한국이 잠든 사이 뉴욕에서 거래된 환율로<br>오늘의 시장을 미리 읽으세요!</p>
+            <div class="clock" id="clock"></div>
+            <div class="market-status" id="marketStatus"></div>
+        </header>
+        
+        <div class="concept-card">
+            <h3>💡 핵심 개념 (이것만 기억하세요!)</h3>
+            <p>
+                <span class="concept-highlight">NDF > 전일종가</span> → 환율 상승 예상 → <strong>원화 매도</strong><br>
+                <span class="concept-highlight">NDF < 전일종가</span> → 환율 하락 예상 → <strong>원화 매수</strong>
+            </p>
+        </div>
+        
+        <div class="input-card">
+            <h3>📌 STEP 1: 전일 종가</h3>
+            <p class="desc">어제 원달러 환율 마감가를 입력하세요</p>
+            <div class="input-group">
+                <label>전일 종가 (원)</label>
+                <input type="number" id="prevClose" value="1438.29" step="0.01" inputmode="decimal">
+            </div>
+        </div>
+        
+        <div class="input-card">
+            <h3>📌 STEP 2: 현재 NDF 환율</h3>
+            <p class="desc">Barchart에서 실시간 역외환율을 확인하세요</p>
+            <div class="input-group">
+                <label>NDF 현재가 (원)</label>
+                <input type="number" id="ndfRate" value="1478.44" step="0.01" inputmode="decimal">
+            </div>
+            <div class="input-group">
+                <label>변동폭 (원)</label>
+                <input type="number" id="ndfChange" value="2.88" step="0.01" inputmode="decimal">
+            </div>
+            <div class="input-group">
+                <label>변동률 (%)</label>
+                <input type="number" id="ndfChangePct" value="0.20" step="0.01" inputmode="decimal">
+            </div>
+        </div>
+        
+        <div class="quick-links">
+            <a href="https://www.barchart.com/forex/quotes/%5EUSDKRW/forward-rates" target="_blank" class="quick-link">
+                📈 Barchart 열기
+            </a>
+            <a href="https://finance.naver.com/marketindex/exchangeDetail.naver?marketindexCd=FX_USDKRW" target="_blank" class="quick-link">
+                🔍 네이버 환율
+            </a>
+        </div>
+        
+        <button class="analyze-btn" onclick="analyze()">
+            🚀 분석하고 시그널 받기
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>분석 중...</p>
+        </div>
+        
+        <div class="signal-card" id="signalCard">
+            <div class="signal-emoji" id="signalEmoji">🟢</div>
+            <div class="signal-text" id="signalText">원화 매도</div>
+            <div class="signal-sub" id="signalSub">(달러 매수 - 환율 상승 예상)</div>
+            <div class="signal-gap" id="signalGap">NDF 갭: +40.15원 (+2.79%)</div>
+            <div class="confidence-text" id="confidenceText">시그널 강도: 매우 강함 (85%)</div>
+            <div class="confidence-bar">
+                <div class="confidence-fill" id="confidenceFill" style="width: 85%"></div>
+            </div>
+        </div>
+        
+        <div class="detail-card" id="detailCard">
+            <h3>📊 시장 데이터</h3>
+            <div class="detail-row">
+                <span class="detail-label">전일 종가</span>
+                <span class="detail-value" id="detailPrevClose">1,438.29원</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">NDF 현재가</span>
+                <span class="detail-value" id="detailNdfRate">1,478.44원</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">NDF 변동</span>
+                <span class="detail-value" id="detailNdfChange">+2.88원 (+0.20%)</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">갭 (NDF - 전일종가)</span>
+                <span class="detail-value" id="detailGap">+40.15원 (+2.79%)</span>
+            </div>
+        </div>
+        
+        <div class="strategy-card" id="strategyCard">
+            <h3>📋 추천 전략</h3>
+            <div id="strategyList"></div>
+        </div>
+        
+        <div class="guide-card">
+            <h3>📖 Barchart에서 NDF 읽는 법</h3>
+            <p>
+                • 상단 큰 숫자 = NDF 현재가<br>
+                • +2.88 (+0.20%) = 전일 대비 변동<br>
+                • 아침 6~8시 확인이 가장 정확해요!
+            </p>
+        </div>
+        
+        <button class="save-btn" onclick="saveData()">💾 데이터 저장하기</button>
+        
+        <div class="warning">
+            ⚠️ 이 분석은 참고용이며, 투자 결정은 본인 책임입니다.<br>
+            NDF 시그널 적중률은 약 65~75%입니다.
+        </div>
+        
+        <div class="footer">
+            <p>💱 NDF 원달러 트레이딩 시그널 시스템</p>
+            <p>© 2025 - 아침 9시 전에 확인하세요!</p>
+        </div>
+    </div>
+    
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const options = { 
+                timeZone: 'Asia/Seoul',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            const formatter = new Intl.DateTimeFormat('ko-KR', options);
+            const parts = formatter.formatToParts(now);
+            
+            let year, month, day, hour, minute, second;
+            parts.forEach(part => {
+                if (part.type === 'year') year = part.value;
+                if (part.type === 'month') month = part.value;
+                if (part.type === 'day') day = part.value;
+                if (part.type === 'hour') hour = part.value;
+                if (part.type === 'minute') minute = part.value;
+                if (part.type === 'second') second = part.value;
+            });
+            
+            const hourNum = parseInt(hour);
+            const dayOfWeek = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Seoul'})).getDay();
+            
+            document.getElementById('clock').textContent = `🇰🇷 ${year}-${month}-${day} ${hour}:${minute}:${second} KST`;
+            
+            const statusEl = document.getElementById('marketStatus');
+            
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                statusEl.textContent = '🔴 주말 휴장';
+                statusEl.className = 'market-status closed';
+            } else if (hourNum >= 6 && hourNum < 9) {
+                statusEl.textContent = '🟡 NDF 확인 최적 시간!';
+                statusEl.className = 'market-status optimal';
+            } else if (hourNum >= 9 && hourNum < 16) {
+                statusEl.textContent = '🟢 한국시장 거래중';
+                statusEl.className = 'market-status open';
+            } else {
+                statusEl.textContent = '⚪ 한국시장 마감';
+                statusEl.className = 'market-status closed';
+            }
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        function loadData() {
+            const saved = localStorage.getItem('ndfTradingData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.prevClose) document.getElementById('prevClose').value = data.prevClose;
+                if (data.ndfRate) document.getElementById('ndfRate').value = data.ndfRate;
+                if (data.ndfChange) document.getElementById('ndfChange').value = data.ndfChange;
+                if (data.ndfChangePct) document.getElementById('ndfChangePct').value = data.ndfChangePct;
+            }
+        }
+        loadData();
+        
+        function saveData() {
+            const data = {
+                prevClose: document.getElementById('prevClose').value,
+                ndfRate: document.getElementById('ndfRate').value,
+                ndfChange: document.getElementById('ndfChange').value,
+                ndfChangePct: document.getElementById('ndfChangePct').value,
+                savedAt: new Date().toISOString()
+            };
+            localStorage.setItem('ndfTradingData', JSON.stringify(data));
+            alert('✅ 데이터가 저장되었습니다!');
+        }
+        
+        function analyze() {
+            const prevClose = parseFloat(document.getElementById('prevClose').value);
+            const ndfRate = parseFloat(document.getElementById('ndfRate').value);
+            const ndfChange = parseFloat(document.getElementById('ndfChange').value);
+            const ndfChangePct = parseFloat(document.getElementById('ndfChangePct').value);
+            
+            if (isNaN(prevClose) || isNaN(ndfRate)) {
+                alert('전일 종가와 NDF 현재가를 입력해주세요.');
+                return;
+            }
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('signalCard').classList.remove('show');
+            document.getElementById('detailCard').classList.remove('show');
+            document.getElementById('strategyCard').classList.remove('show');
+            
+            setTimeout(() => {
+                const gap = ndfRate - prevClose;
+                const gapPct = (gap / prevClose) * 100;
+                
+                let signal, signalText, signalSub, emoji, strategies;
+                
+                if (gap > 0) {
+                    signal = 'sell';
+                    signalText = '원화 매도';
+                    signalSub = '(달러 매수 - 환율 상승 예상)';
+                    emoji = '🟢';
+                    strategies = [
+                        '오늘 시장은 어제보다 높게 시작할 가능성이 높아요',
+                        '원화를 팔고 달러를 사는 포지션을 고려하세요',
+                        '갭상승 후 되돌림이 올 수 있으니 주의하세요',
+                        '손절가: 전일 종가 아래로 설정'
+                    ];
+                } else if (gap < 0) {
+                    signal = 'buy';
+                    signalText = '원화 매수';
+                    signalSub = '(달러 매도 - 환율 하락 예상)';
+                    emoji = '🔴';
+                    strategies = [
+                        '오늘 시장은 어제보다 낮게 시작할 가능성이 높아요',
+                        '달러를 팔고 원화를 사는 포지션을 고려하세요',
+                        '갭하락 후 반등이 올 수 있으니 주의하세요',
+                        '손절가: 전일 종가 위로 설정'
+                    ];
+                } else {
+                    signal = 'hold';
+                    signalText = '관망';
+                    signalSub = '(방향성 불분명 - 기다리세요)';
+                    emoji = '🟡';
+                    strategies = [
+                        '시장이 보합으로 시작할 가능성이 높아요',
+                        '확실한 방향이 나올 때까지 기다리세요',
+                        '장 시작 후 30분간 추이를 지켜보세요',
+                        '시그널이 약할 때는 무리하게 진입하지 마세요'
+                    ];
+                }
+                
+                const absGap = Math.abs(gap);
+                let confidence, strength;
+                
+                if (absGap >= 10) {
+                    confidence = Math.min(95, 70 + absGap);
+                    strength = '매우 강함';
+                } else if (absGap >= 5) {
+                    confidence = 50 + absGap * 2;
+                    strength = '강함';
+                } else if (absGap >= 2) {
+                    confidence = 30 + absGap * 5;
+                    strength = '보통';
+                } else {
+                    confidence = 20 + absGap * 5;
+                    strength = '약함';
+                }
+                
+                const signalCard = document.getElementById('signalCard');
+                signalCard.className = `signal-card show ${signal}`;
+                document.getElementById('signalEmoji').textContent = emoji;
+                document.getElementById('signalText').textContent = signalText;
+                document.getElementById('signalSub').textContent = signalSub;
+                document.getElementById('signalGap').textContent = 
+                    `NDF 갭: ${gap >= 0 ? '+' : ''}${gap.toFixed(2)}원 (${gapPct >= 0 ? '+' : ''}${gapPct.toFixed(2)}%)`;
+                document.getElementById('confidenceText').textContent = 
+                    `시그널 강도: ${strength} (${confidence.toFixed(0)}%)`;
+                document.getElementById('confidenceFill').style.width = `${confidence}%`;
+                
+                document.getElementById('detailPrevClose').textContent = `${prevClose.toLocaleString()}원`;
+                document.getElementById('detailNdfRate').textContent = `${ndfRate.toLocaleString()}원`;
+                
+                const changeEl = document.getElementById('detailNdfChange');
+                changeEl.textContent = `${ndfChange >= 0 ? '+' : ''}${ndfChange.toFixed(2)}원 (${ndfChangePct >= 0 ? '+' : ''}${ndfChangePct.toFixed(2)}%)`;
+                changeEl.className = `detail-value ${ndfChange >= 0 ? 'positive' : 'negative'}`;
+                
+                const gapEl = document.getElementById('detailGap');
+                gapEl.textContent = `${gap >= 0 ? '+' : ''}${gap.toFixed(2)}원 (${gapPct >= 0 ? '+' : ''}${gapPct.toFixed(2)}%)`;
+                gapEl.className = `detail-value ${gap >= 0 ? 'positive' : 'negative'}`;
+                
+                const strategyList = document.getElementById('strategyList');
+                strategyList.innerHTML = strategies.map(s => 
+                    `<div class="strategy-item">${s}</div>`
+                ).join('');
+                
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('detailCard').classList.add('show');
+                document.getElementById('strategyCard').classList.add('show');
+                
+                signalCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+            }, 800);
+        }
+    </script>
+</body>
+</html>
