@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💱 FX 환율 AI 차트 분석 (무료)</title>
+    <title>💱 FX 환율 AI 차트 분석 (개선판)</title>
     <style>
         * {
             margin: 0;
@@ -253,6 +253,51 @@
             cursor: pointer;
         }
         
+        /* URL 입력 영역 */
+        .url-input-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #2a2a4a;
+        }
+        
+        .url-input-section label {
+            display: block;
+            font-size: 0.85rem;
+            color: #8892b0;
+            margin-bottom: 8px;
+        }
+        
+        .url-input-row {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .url-input-row input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #3a3a5a;
+            border-radius: 10px;
+            background: #1e1e3c;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+        
+        .url-input-row input:focus {
+            outline: 2px solid #ff0080;
+            border-color: #ff0080;
+        }
+        
+        .url-fetch-btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ff0080, #9b59b6);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
         /* AI 분석 진행 */
         .ai-progress {
             background: linear-gradient(135deg, #1a1a3a, #2a1a4a);
@@ -351,6 +396,8 @@
         .ai-value.up { color: #00ff88; }
         .ai-value.down { color: #ff4757; }
         .ai-value.neutral { color: #ffd32a; }
+        .ai-value.overbought { color: #ff4757; }
+        .ai-value.oversold { color: #00ff88; }
         
         .ai-comment {
             background: rgba(155, 89, 182, 0.1);
@@ -543,6 +590,7 @@
         
         .help-text strong { color: #ffffff; }
         .help-text.ai { background: rgba(155, 89, 182, 0.1); border-color: rgba(155, 89, 182, 0.3); color: #9b59b6; }
+        .help-text.success { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.3); color: #00ff88; }
         
         /* ==================== 결과 영역 ==================== */
         .result-area { display: none; }
@@ -832,6 +880,101 @@
             color: #8892b0;
             font-size: 0.7rem;
         }
+        
+        /* 수동 입력 섹션 */
+        .manual-input-section {
+            background: #141428;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #3a3a5a;
+        }
+        
+        .manual-input-section h4 {
+            color: #ff0080;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .manual-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .manual-input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .manual-input-item label {
+            font-size: 0.75rem;
+            color: #8892b0;
+        }
+        
+        .manual-input-item input {
+            padding: 10px;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            background: #1e1e3c;
+            color: #ffffff;
+            font-size: 0.95rem;
+            text-align: right;
+        }
+        
+        .manual-input-item input:focus {
+            outline: 2px solid #ff0080;
+            border-color: #ff0080;
+        }
+        
+        .manual-input-item.full {
+            grid-column: 1 / -1;
+        }
+        
+        .manual-input-item select {
+            padding: 10px;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            background: #1e1e3c;
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+        
+        .manual-analyze-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #00d4ff, #0080ff);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .or-divider {
+            text-align: center;
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #3a3a5a;
+        }
+        
+        .or-divider::before { left: 0; }
+        .or-divider::after { right: 0; }
     </style>
 </head>
 <body>
@@ -840,7 +983,7 @@
         <header class="header">
             <h1>💱 FX 환율 AI 차트 분석</h1>
             <p class="subtitle">차트 캡처 → AI 자동 분석 → 매매 포인트!</p>
-            <div class="free-badge">🆓 무료 · API 키 불필요 · Pollinations.ai 활용</div>
+            <div class="free-badge">🆓 무료 · API 키 불필요</div>
             
             <div class="clock-box">
                 <div class="clock" id="clock">🇰🇷 2026-01-12 14:00:00</div>
@@ -926,7 +1069,7 @@
                     <div class="step-number ai">🤖</div>
                     <div class="step-title">
                         <h3>차트 이미지 업로드</h3>
-                        <p>Pollinations AI가 무료로 분석해요!</p>
+                        <p>AI가 자동으로 분석해요!</p>
                     </div>
                     <div class="step-status pending" id="chartStatus">대기중</div>
                 </div>
@@ -943,8 +1086,17 @@
                     <button class="remove-chart-btn" onclick="removeChart()">×</button>
                 </div>
                 
+                <!-- URL 입력 옵션 -->
+                <div class="url-input-section">
+                    <label>또는 이미지 URL 직접 입력:</label>
+                    <div class="url-input-row">
+                        <input type="text" id="chartUrl" placeholder="https://example.com/chart.png">
+                        <button class="url-fetch-btn" onclick="fetchChartFromUrl()">불러오기</button>
+                    </div>
+                </div>
+                
                 <div class="help-text ai">
-                    🤖 <strong>Pollinations.ai Vision API</strong>를 사용해요. 완전 무료이고 API 키가 필요 없어요!
+                    🤖 <strong>Pollinations.ai Vision API</strong>를 사용해요. 무료이고 API 키가 필요 없어요!
                 </div>
             </div>
             
@@ -967,7 +1119,7 @@
                 <div class="ai-result-header">
                     <span style="font-size:1.5rem;">🤖</span>
                     <h4>AI 분석 결과</h4>
-                    <span class="ai-badge">Pollinations AI</span>
+                    <span class="ai-badge">AI Vision</span>
                 </div>
                 
                 <div class="ai-value-row">
@@ -991,6 +1143,10 @@
                     <span class="ai-value up" id="aiSupport2">-</span>
                 </div>
                 <div class="ai-value-row">
+                    <span class="ai-value-label">RSI</span>
+                    <span class="ai-value" id="aiRSI">-</span>
+                </div>
+                <div class="ai-value-row">
                     <span class="ai-value-label">추세 방향</span>
                     <span class="ai-value" id="aiTrend">-</span>
                 </div>
@@ -1005,6 +1161,55 @@
                 </div>
             </div>
             
+            <div class="or-divider">또는 수동으로 입력</div>
+            
+            <!-- 수동 입력 섹션 -->
+            <div class="manual-input-section" id="manualInputSection">
+                <h4>📝 차트 정보 수동 입력</h4>
+                <p style="font-size:0.8rem;color:#8892b0;text-align:center;margin-bottom:15px;">
+                    AI가 이미지를 읽지 못할 경우 직접 입력하세요
+                </p>
+                
+                <div class="manual-input-grid">
+                    <div class="manual-input-item">
+                        <label>현재가 (원)</label>
+                        <input type="number" id="manualCurrentPrice" placeholder="1468.14" step="0.01">
+                    </div>
+                    <div class="manual-input-item">
+                        <label>RSI</label>
+                        <input type="number" id="manualRSI" placeholder="73.65" step="0.01">
+                    </div>
+                    <div class="manual-input-item">
+                        <label>볼린저 상단</label>
+                        <input type="number" id="manualBBUpper" placeholder="1478.77" step="0.01">
+                    </div>
+                    <div class="manual-input-item">
+                        <label>볼린저 하단</label>
+                        <input type="number" id="manualBBLower" placeholder="1441.45" step="0.01">
+                    </div>
+                    <div class="manual-input-item">
+                        <label>1차 저항선</label>
+                        <input type="number" id="manualResistance1" placeholder="1478" step="0.01">
+                    </div>
+                    <div class="manual-input-item">
+                        <label>1차 지지선</label>
+                        <input type="number" id="manualSupport1" placeholder="1460" step="0.01">
+                    </div>
+                    <div class="manual-input-item full">
+                        <label>추세 방향</label>
+                        <select id="manualTrend">
+                            <option value="up">📈 상승</option>
+                            <option value="down">📉 하락</option>
+                            <option value="sideways">➡️ 횡보</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="manual-analyze-btn" onclick="analyzeManualInput()">
+                    📊 수동 입력으로 분석하기
+                </button>
+            </div>
+            
             <div class="step-card" id="timeframeCard" style="display:none;">
                 <div class="step-header">
                     <div class="step-number ai">⏰</div>
@@ -1016,8 +1221,8 @@
                 <div class="timeframe-options">
                     <button class="timeframe-btn" onclick="setTimeframe('5m',this)">5분</button>
                     <button class="timeframe-btn" onclick="setTimeframe('15m',this)">15분</button>
-                    <button class="timeframe-btn" onclick="setTimeframe('1h',this)">1시간</button>
-                    <button class="timeframe-btn active" onclick="setTimeframe('4h',this)">4시간</button>
+                    <button class="timeframe-btn active" onclick="setTimeframe('1h',this)">1시간</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('4h',this)">4시간</button>
                     <button class="timeframe-btn" onclick="setTimeframe('1d',this)">일봉</button>
                 </div>
             </div>
@@ -1039,7 +1244,7 @@
             
             <button class="analyze-btn" id="chartAnalyzeBtn" onclick="finalizeChartAnalysis()" disabled>
                 🤖 AI 분석 결과로 매매 가이드 받기
-                <span class="sub-text">차트를 업로드하면 AI가 자동 분석해요</span>
+                <span class="sub-text">차트를 업로드하거나 수동 입력하세요</span>
             </button>
         </div>
         
@@ -1198,6 +1403,10 @@
                     <span class="data-label">NDF 갭</span>
                     <span class="data-value" id="dataGap">-</span>
                 </div>
+                <div class="data-row" id="dataRsiRow">
+                    <span class="data-label">RSI</span>
+                    <span class="data-value" id="dataRsi">-</span>
+                </div>
                 <div class="data-row">
                     <span class="data-label">예상 방향</span>
                     <span class="data-value" id="dataDir">📈 상승</span>
@@ -1207,9 +1416,9 @@
             <div class="warning-box">
                 <h4>⚠️ 주의사항</h4>
                 <ul class="warning-list">
-                    <li>AI 분석은 100% 정확하지 않아요</li>
+                    <li>기술적 분석은 100% 정확하지 않아요</li>
+                    <li>RSI 과매수 구간 - 단기 조정 가능성</li>
                     <li>손절가는 반드시 지켜주세요</li>
-                    <li>소액으로 먼저 연습하세요</li>
                     <li>투자 책임은 본인에게 있어요</li>
                 </ul>
             </div>
@@ -1219,7 +1428,7 @@
         
         <div class="footer">
             <p>💱 FX 환율 AI 차트 분석 가이드</p>
-            <p>Powered by Pollinations.ai (무료)</p>
+            <p>기술적 분석 기반 매매 신호</p>
             <p style="margin-top:8px;">※ 투자 책임은 본인에게 있습니다</p>
         </div>
     </div>
@@ -1227,7 +1436,7 @@
     <script>
         // 전역 변수
         let currentTab = 'ndf';
-        let selectedTimeframe = '4h';
+        let selectedTimeframe = '1h';
         let uploadedImageBase64 = null;
         let ndfResult = null;
         let chartResult = null;
@@ -1333,12 +1542,35 @@
             reader.readAsDataURL(file);
         }
         
+        // URL에서 차트 불러오기
+        async function fetchChartFromUrl() {
+            const url = document.getElementById('chartUrl').value.trim();
+            if(!url) {
+                alert('이미지 URL을 입력해주세요.');
+                return;
+            }
+            
+            document.getElementById('chartStatus').textContent = '불러오는중...';
+            document.getElementById('chartStatus').className = 'step-status analyzing';
+            
+            try {
+                // URL로 직접 분석 시도
+                await analyzeChartWithAI(url);
+            } catch(err) {
+                console.error('URL 분석 오류:', err);
+                alert('이미지를 불러오거나 분석하는데 실패했습니다.\n직접 업로드하거나 수동 입력을 이용해주세요.');
+                document.getElementById('chartStatus').textContent = '오류';
+                document.getElementById('chartStatus').className = 'step-status error';
+            }
+        }
+        
         function removeChart() {
             uploadedImageBase64 = null;
             aiAnalysisData = null;
             document.getElementById('uploadArea').style.display = 'block';
             document.getElementById('previewContainer').style.display = 'none';
             document.getElementById('chartFile').value = '';
+            document.getElementById('chartUrl').value = '';
             document.getElementById('chartStatus').textContent = '대기중';
             document.getElementById('chartStatus').className = 'step-status pending';
             document.getElementById('aiResultCard').classList.remove('show');
@@ -1352,11 +1584,16 @@
             const progress = document.getElementById('aiProgress');
             progress.classList.add('show');
             
-            // 단계 애니메이션
+            // 단계 초기화
             const steps = ['aiStep1','aiStep2','aiStep3','aiStep4'];
+            steps.forEach(s => {
+                document.getElementById(s).classList.remove('active','done');
+            });
+            
+            // 단계 애니메이션
             let step = 0;
             const interval = setInterval(() => {
-                if(step>0) {
+                if(step>0 && step<=4) {
                     document.getElementById(steps[step-1]).classList.remove('active');
                     document.getElementById(steps[step-1]).classList.add('done');
                 }
@@ -1364,11 +1601,14 @@
                     document.getElementById(steps[step]).classList.add('active');
                     step++;
                 }
-            }, 600);
+            }, 800);
             
             try {
+                // 이미지 데이터 준비
+                let imageUrl = imageData;
+                
                 // Pollinations.ai Vision API 호출
-                const response = await fetch('https://text.pollinations.ai/openai', {
+                const response = await fetch('https://text.pollinations.ai/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1378,34 +1618,44 @@
                             content: [
                                 {
                                     type: 'text',
-                                    text: `You are an expert forex chart analyst. Analyze this USD/KRW chart image and extract:
-1. Current price (approximate from the chart)
-2. Key resistance levels (2 levels if visible)
-3. Key support levels (2 levels if visible)
-4. Overall trend direction (up/down/sideways)
-5. Any chart patterns detected
+                                    text: `You are an expert forex technical analyst. Analyze this USD/KRW chart image carefully.
 
-IMPORTANT: Respond ONLY with valid JSON in this exact format, no other text:
+Look for these indicators if visible:
+- Current price (시가/현재가)
+- Bollinger Bands (BB) - upper, middle, lower bands
+- RSI value
+- MACD
+- Stochastic RSI
+- Support and resistance levels
+- Price trend direction
+
+RESPOND ONLY with this exact JSON format, no other text:
 {
-    "currentPrice": 1455,
-    "resistance1": 1470,
-    "resistance2": 1485,
-    "support1": 1440,
-    "support2": 1425,
+    "currentPrice": 1468,
+    "resistance1": 1479,
+    "resistance2": 1490,
+    "support1": 1460,
+    "support2": 1441,
+    "rsi": 73.6,
+    "stochRsi": 98.9,
+    "macd": 1.13,
+    "bbUpper": 1479,
+    "bbMiddle": 1460,
+    "bbLower": 1441,
     "trend": "up",
-    "patterns": ["상승 추세선"],
-    "comment": "차트 분석 코멘트를 한국어로 작성"
+    "patterns": ["RSI 과매수", "볼린저밴드 상단 근접"],
+    "comment": "RSI와 Stochastic RSI가 모두 과매수 구간에 있어 단기 조정 가능성이 있습니다. 그러나 강한 상승 모멘텀이 유지되고 있어 추세는 상승 방향입니다."
 }
 
-If you cannot determine a value, use null. Prices should be realistic USD/KRW rates (1100-1700 range).`
+Use null for values you cannot determine. Prices should be realistic USD/KRW rates (1100-1700 range). RSI range is 0-100.`
                                 },
                                 {
                                     type: 'image_url',
-                                    image_url: { url: imageData }
+                                    image_url: { url: imageUrl }
                                 }
                             ]
                         }],
-                        max_tokens: 800
+                        max_tokens: 1000
                     })
                 });
                 
@@ -1415,39 +1665,38 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
                     document.getElementById(s).classList.add('done');
                 });
                 
-                if(!response.ok) throw new Error('API 오류: ' + response.status);
-                
-                const data = await response.json();
-                const content = data.choices[0].message.content;
-                
-                // JSON 파싱
-                let result;
-                try {
-                    const jsonMatch = content.match(/\{[\s\S]*\}/);
-                    if(jsonMatch) {
-                        result = JSON.parse(jsonMatch[0]);
-                    } else {
-                        throw new Error('JSON not found');
-                    }
-                } catch(parseErr) {
-                    console.error('Parse error:', parseErr, content);
-                    result = {
-                        currentPrice: 1450,
-                        resistance1: 1470,
-                        resistance2: 1490,
-                        support1: 1430,
-                        support2: 1410,
-                        trend: 'sideways',
-                        patterns: ['분석 부분 성공'],
-                        comment: 'AI가 차트를 분석했지만 일부 값은 추정치입니다. 결과를 참고용으로 활용하세요.'
-                    };
+                if(!response.ok) {
+                    throw new Error('API 오류: ' + response.status);
                 }
                 
-                aiAnalysisData = result;
+                const text = await response.text();
+                console.log('API Response:', text);
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                    if(data.choices && data.choices[0] && data.choices[0].message) {
+                        const content = data.choices[0].message.content;
+                        const jsonMatch = content.match(/\{[\s\S]*\}/);
+                        if(jsonMatch) {
+                            data = JSON.parse(jsonMatch[0]);
+                        }
+                    }
+                } catch(parseErr) {
+                    // JSON 추출 시도
+                    const jsonMatch = text.match(/\{[\s\S]*\}/);
+                    if(jsonMatch) {
+                        data = JSON.parse(jsonMatch[0]);
+                    } else {
+                        throw new Error('JSON 파싱 실패');
+                    }
+                }
+                
+                aiAnalysisData = data;
                 
                 setTimeout(() => {
                     progress.classList.remove('show');
-                    displayAIResult(result);
+                    displayAIResult(data);
                 }, 500);
                 
             } catch(err) {
@@ -1455,10 +1704,11 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
                 console.error('AI Error:', err);
                 progress.classList.remove('show');
                 
-                document.getElementById('chartStatus').textContent = '오류';
+                document.getElementById('chartStatus').textContent = '수동입력 필요';
                 document.getElementById('chartStatus').className = 'step-status error';
                 
-                alert('AI 분석 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.\n\n오류: ' + err.message);
+                // 수동 입력 안내
+                alert('AI가 차트를 분석하지 못했습니다.\n\n아래 "차트 정보 수동 입력" 섹션에서\n차트에 표시된 값들을 직접 입력해주세요.\n\n현재가: 1468.14\nRSI: 73.65\n등의 값을 입력하시면 됩니다.');
             }
         }
         
@@ -1469,6 +1719,23 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
             document.getElementById('aiResistance2').textContent = data.resistance2 ? data.resistance2.toLocaleString() + '원' : '-';
             document.getElementById('aiSupport1').textContent = data.support1 ? data.support1.toLocaleString() + '원' : '-';
             document.getElementById('aiSupport2').textContent = data.support2 ? data.support2.toLocaleString() + '원' : '-';
+            
+            // RSI 표시
+            const rsiEl = document.getElementById('aiRSI');
+            if(data.rsi) {
+                rsiEl.textContent = data.rsi.toFixed(1);
+                if(data.rsi > 70) {
+                    rsiEl.className = 'ai-value overbought';
+                    rsiEl.textContent += ' (과매수)';
+                } else if(data.rsi < 30) {
+                    rsiEl.className = 'ai-value oversold';
+                    rsiEl.textContent += ' (과매도)';
+                } else {
+                    rsiEl.className = 'ai-value neutral';
+                }
+            } else {
+                rsiEl.textContent = '-';
+            }
             
             const trendMap = { up: '📈 상승', down: '📉 하락', sideways: '➡️ 횡보' };
             const trendEl = document.getElementById('aiTrend');
@@ -1484,7 +1751,76 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
             document.getElementById('chartStatus').className = 'step-status done';
             document.getElementById('chartAnalyzeBtn').disabled = false;
             
+            // 프리뷰에 URL 이미지 표시
+            if(!uploadedImageBase64 && document.getElementById('chartUrl').value) {
+                document.getElementById('chartPreview').src = document.getElementById('chartUrl').value;
+                document.getElementById('uploadArea').style.display = 'none';
+                document.getElementById('previewContainer').style.display = 'block';
+            }
+            
             updateCombinedCheck();
+        }
+        
+        // 수동 입력 분석
+        function analyzeManualInput() {
+            const currentPrice = parseFloat(document.getElementById('manualCurrentPrice').value);
+            const rsi = parseFloat(document.getElementById('manualRSI').value);
+            const bbUpper = parseFloat(document.getElementById('manualBBUpper').value);
+            const bbLower = parseFloat(document.getElementById('manualBBLower').value);
+            const resistance1 = parseFloat(document.getElementById('manualResistance1').value);
+            const support1 = parseFloat(document.getElementById('manualSupport1').value);
+            const trend = document.getElementById('manualTrend').value;
+            
+            if(!currentPrice || currentPrice < 1000) {
+                alert('현재가를 정확히 입력해주세요. (예: 1468.14)');
+                return;
+            }
+            
+            // 패턴 자동 감지
+            const patterns = [];
+            if(rsi > 70) patterns.push('RSI 과매수');
+            if(rsi < 30) patterns.push('RSI 과매도');
+            if(bbUpper && currentPrice > bbUpper * 0.99) patterns.push('볼린저밴드 상단 근접');
+            if(bbLower && currentPrice < bbLower * 1.01) patterns.push('볼린저밴드 하단 근접');
+            if(trend === 'up') patterns.push('상승 추세');
+            if(trend === 'down') patterns.push('하락 추세');
+            
+            // 코멘트 생성
+            let comment = '';
+            if(rsi > 70) {
+                comment = 'RSI가 과매수 구간에 있어 단기 조정 가능성이 있습니다. ';
+            } else if(rsi < 30) {
+                comment = 'RSI가 과매도 구간에 있어 반등 가능성이 있습니다. ';
+            }
+            
+            if(trend === 'up') {
+                comment += '전반적인 추세는 상승 방향입니다.';
+            } else if(trend === 'down') {
+                comment += '전반적인 추세는 하락 방향입니다.';
+            } else {
+                comment += '현재 횡보 구간으로 방향 대기 중입니다.';
+            }
+            
+            // 데이터 구성
+            aiAnalysisData = {
+                currentPrice: currentPrice,
+                resistance1: resistance1 || bbUpper || currentPrice * 1.007,
+                resistance2: (resistance1 || bbUpper || currentPrice * 1.007) * 1.007,
+                support1: support1 || bbLower || currentPrice * 0.993,
+                support2: (support1 || bbLower || currentPrice * 0.993) * 0.993,
+                rsi: rsi || null,
+                bbUpper: bbUpper || null,
+                bbMiddle: bbUpper && bbLower ? (bbUpper + bbLower) / 2 : null,
+                bbLower: bbLower || null,
+                trend: trend,
+                patterns: patterns.length > 0 ? patterns : ['수동 입력 데이터'],
+                comment: comment || '수동으로 입력된 데이터를 기반으로 분석했습니다.'
+            };
+            
+            displayAIResult(aiAnalysisData);
+            
+            document.getElementById('chartStatus').textContent = '수동입력 완료';
+            document.getElementById('chartStatus').className = 'step-status done';
         }
         
         // 복합 분석 체크
@@ -1582,7 +1918,7 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
         // 차트 분석 최종화
         function finalizeChartAnalysis() {
             if(!aiAnalysisData) {
-                alert('차트를 먼저 업로드해주세요.');
+                alert('차트를 먼저 업로드하거나 수동 입력해주세요.');
                 return;
             }
             
@@ -1595,56 +1931,95 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
             let confidence = 60;
             
             const trend = data.trend || 'sideways';
-            entryPrice = data.currentPrice || 1450;
+            const rsi = data.rsi || 50;
+            entryPrice = data.currentPrice || 1468;
+            
+            // RSI 기반 신호 조정
+            let rsiSignal = 'neutral';
+            if(rsi > 70) rsiSignal = 'overbought';
+            if(rsi < 30) rsiSignal = 'oversold';
             
             if(trend === 'up') {
-                signal = 'SELL_KRW';
-                signalClass = 'sell-krw';
-                signalIcon = '🟢';
-                signalTitle = '원화 매도';
-                signalDesc = '🤖 AI: 상승 패턴 감지! 달러 매수';
-                targetPrice = data.resistance1 || entryPrice*1.01;
-                stopPrice = data.support1 || entryPrice*0.995;
-                confidence = 70;
-                strategies = [
-                    {title:`현재가 ${entryPrice.toFixed(0)}원 근처 진입`, desc:'AI가 감지한 상승 추세 활용'},
-                    {title:`저항선 ${targetPrice.toFixed(0)}원에서 절반 정리`, desc:'AI가 감지한 저항선에서 수익 실현'},
-                    {title:`지지선 ${stopPrice.toFixed(0)}원 이탈 시 손절`, desc:'AI가 감지한 지지선 아래면 손절'}
-                ];
+                if(rsi > 80) {
+                    // 과매수 상태에서 상승 추세 - 주의 필요
+                    signal = 'HOLD';
+                    signalClass = 'hold';
+                    signalIcon = '⚠️';
+                    signalTitle = '관망 (과매수)';
+                    signalDesc = '🤖 상승 추세지만 RSI 과매수! 조정 가능';
+                    targetPrice = data.resistance1 || entryPrice*1.005;
+                    stopPrice = data.support1 || entryPrice*0.99;
+                    confidence = 45;
+                    strategies = [
+                        {title:'신규 진입 보류', desc:`RSI ${rsi.toFixed(1)}로 과매수 상태. 조정 후 진입`},
+                        {title:'기존 포지션 일부 정리', desc:'목표가 근처에서 수익 실현 고려'},
+                        {title:`지지선 ${(data.support1 || entryPrice*0.99).toFixed(0)}원 주시`, desc:'이탈 시 추가 하락 가능'}
+                    ];
+                } else {
+                    signal = 'SELL_KRW';
+                    signalClass = 'sell-krw';
+                    signalIcon = '🟢';
+                    signalTitle = '원화 매도';
+                    signalDesc = '🤖 AI: 상승 추세! 달러 매수';
+                    targetPrice = data.resistance1 || entryPrice*1.01;
+                    stopPrice = data.support1 || entryPrice*0.995;
+                    confidence = 70;
+                    strategies = [
+                        {title:`현재가 ${entryPrice.toFixed(0)}원 근처 진입`, desc:'상승 추세 활용'},
+                        {title:`저항선 ${(data.resistance1 || entryPrice*1.01).toFixed(0)}원에서 절반 정리`, desc:'1차 목표가 도달 시 수익 실현'},
+                        {title:`지지선 ${(data.support1 || entryPrice*0.995).toFixed(0)}원 이탈 시 손절`, desc:'손실 제한 필수'}
+                    ];
+                }
             } else if(trend === 'down') {
-                signal = 'BUY_KRW';
-                signalClass = 'buy-krw';
-                signalIcon = '🔴';
-                signalTitle = '원화 매수';
-                signalDesc = '🤖 AI: 하락 패턴 감지! 달러 매도';
-                targetPrice = data.support1 || entryPrice*0.99;
-                stopPrice = data.resistance1 || entryPrice*1.005;
-                confidence = 70;
-                strategies = [
-                    {title:`현재가 ${entryPrice.toFixed(0)}원 근처 진입`, desc:'AI가 감지한 하락 추세 활용'},
-                    {title:`지지선 ${targetPrice.toFixed(0)}원에서 절반 정리`, desc:'AI가 감지한 지지선에서 수익 실현'},
-                    {title:`저항선 ${stopPrice.toFixed(0)}원 돌파 시 손절`, desc:'AI가 감지한 저항선 위면 손절'}
-                ];
+                if(rsi < 20) {
+                    signal = 'HOLD';
+                    signalClass = 'hold';
+                    signalIcon = '⚠️';
+                    signalTitle = '관망 (과매도)';
+                    signalDesc = '🤖 하락 추세지만 RSI 과매도! 반등 가능';
+                    targetPrice = data.support1 || entryPrice*0.995;
+                    stopPrice = data.resistance1 || entryPrice*1.01;
+                    confidence = 45;
+                    strategies = [
+                        {title:'신규 매도 보류', desc:`RSI ${rsi.toFixed(1)}로 과매도. 반등 가능`},
+                        {title:'기존 숏포지션 일부 정리', desc:'과매도 구간에서 수익 실현 고려'},
+                        {title:`저항선 ${(data.resistance1 || entryPrice*1.01).toFixed(0)}원 돌파 주시`, desc:'돌파 시 추세 전환 가능'}
+                    ];
+                } else {
+                    signal = 'BUY_KRW';
+                    signalClass = 'buy-krw';
+                    signalIcon = '🔴';
+                    signalTitle = '원화 매수';
+                    signalDesc = '🤖 AI: 하락 추세! 달러 매도';
+                    targetPrice = data.support1 || entryPrice*0.99;
+                    stopPrice = data.resistance1 || entryPrice*1.005;
+                    confidence = 70;
+                    strategies = [
+                        {title:`현재가 ${entryPrice.toFixed(0)}원 근처 진입`, desc:'하락 추세 활용'},
+                        {title:`지지선 ${(data.support1 || entryPrice*0.99).toFixed(0)}원에서 절반 정리`, desc:'1차 목표가 도달 시 수익 실현'},
+                        {title:`저항선 ${(data.resistance1 || entryPrice*1.005).toFixed(0)}원 돌파 시 손절`, desc:'손실 제한 필수'}
+                    ];
+                }
             } else {
                 signal = 'HOLD';
                 signalClass = 'hold';
                 signalIcon = '🟡';
                 signalTitle = '관망';
-                signalDesc = '🤖 AI: 방향 불분명';
+                signalDesc = '🤖 AI: 방향 불분명. 대기 권장';
                 targetPrice = entryPrice + 5;
                 stopPrice = entryPrice - 5;
                 confidence = 40;
                 strategies = [
-                    {title:'명확한 방향 대기', desc:'AI가 횡보로 판단. 추가 확인 필요'},
-                    {title:'지지/저항 돌파 확인', desc:'돌파 후 진입이 안전'},
-                    {title:'무리한 진입 금지', desc:'횡보 구간은 손실 확률 높음'}
+                    {title:'명확한 방향 대기', desc:'횡보 구간은 진입 리스크 높음'},
+                    {title:'지지/저항 돌파 확인 후 진입', desc:'돌파 방향으로 따라가기'},
+                    {title:'무리한 진입 금지', desc:'횡보 시 손실 확률 높음'}
                 ];
             }
             
             chartResult = {
                 type:'chart', signal, signalClass, signalIcon, signalTitle, signalDesc,
                 entryPrice, targetPrice, stopPrice, strategies, confidence,
-                aiData: data, investment, timeframe: selectedTimeframe
+                aiData: data, investment, timeframe: selectedTimeframe, rsi
             };
             
             updateCombinedCheck();
@@ -1710,6 +2085,7 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
                     {title:'내일 다시 분석', desc:'무리한 진입보다 기다림이 수익'}
                 ];
             } else {
+                // 시그널 불일치 - NDF 우선하되 주의
                 signal = ndf.signal;
                 signalClass = ndf.signalClass;
                 signalIcon = '⚠️';
@@ -1729,7 +2105,7 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
             const result = {
                 type:'combined', signal, signalClass, signalIcon, signalTitle, signalDesc,
                 entryPrice, targetPrice, stopPrice, strategies, confidence,
-                ndf, chart, signalsMatch
+                ndf, chart, signalsMatch, rsi: chart.rsi
             };
             
             displayResult(result);
@@ -1806,6 +2182,25 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
                 document.getElementById('dataNdfRow').style.display = 'none';
             }
             
+            // RSI 표시
+            if(result.rsi || result.aiData?.rsi || result.chart?.rsi) {
+                const rsi = result.rsi || result.aiData?.rsi || result.chart?.rsi;
+                document.getElementById('dataRsiRow').style.display = 'flex';
+                const rsiEl = document.getElementById('dataRsi');
+                rsiEl.textContent = rsi.toFixed(1);
+                if(rsi > 70) {
+                    rsiEl.textContent += ' (과매수)';
+                    rsiEl.className = 'data-value down';
+                } else if(rsi < 30) {
+                    rsiEl.textContent += ' (과매도)';
+                    rsiEl.className = 'data-value up';
+                } else {
+                    rsiEl.className = 'data-value';
+                }
+            } else {
+                document.getElementById('dataRsiRow').style.display = 'none';
+            }
+            
             const dir = document.getElementById('dataDir');
             if(result.signal === 'SELL_KRW') {
                 dir.textContent = '📈 상승 예상';
@@ -1814,7 +2209,7 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
                 dir.textContent = '📉 하락 예상';
                 dir.className = 'data-value down';
             } else {
-                dir.textContent = '➡️ 횡보 예상';
+                dir.textContent = '➡️ 횡보/관망';
                 dir.className = 'data-value';
             }
             
@@ -1835,6 +2230,14 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
             
             removeChart();
             
+            // 수동 입력 초기화
+            document.getElementById('manualCurrentPrice').value = '';
+            document.getElementById('manualRSI').value = '';
+            document.getElementById('manualBBUpper').value = '';
+            document.getElementById('manualBBLower').value = '';
+            document.getElementById('manualResistance1').value = '';
+            document.getElementById('manualSupport1').value = '';
+            
             ndfResult = null;
             chartResult = null;
             aiAnalysisData = null;
@@ -1842,6 +2245,17 @@ If you cannot determine a value, use null. Prices should be realistic USD/KRW ra
             
             window.scrollTo({top:0, behavior:'smooth'});
         }
+        
+        // 페이지 로드 시 샘플 데이터 제안 (업로드된 차트 기준)
+        window.addEventListener('DOMContentLoaded', function() {
+            // 샘플 차트 데이터를 수동 입력 필드에 힌트로 표시
+            document.getElementById('manualCurrentPrice').placeholder = '1468.14';
+            document.getElementById('manualRSI').placeholder = '73.65';
+            document.getElementById('manualBBUpper').placeholder = '1478.77';
+            document.getElementById('manualBBLower').placeholder = '1441.45';
+            document.getElementById('manualResistance1').placeholder = '1479';
+            document.getElementById('manualSupport1').placeholder = '1460';
+        });
     </script>
 </body>
 </html>
