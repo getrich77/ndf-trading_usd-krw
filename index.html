@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💱 오늘의 환율 트레이딩 가이드</title>
+    <title>💱 FX 환율 차트 분석 트레이딩 가이드</title>
     <style>
         * {
             margin: 0;
@@ -33,7 +33,7 @@
         }
         
         .header h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 8px;
             background: linear-gradient(90deg, #00d4ff, #ff0080);
             -webkit-background-clip: text;
@@ -92,6 +92,47 @@
             50% { opacity: 0.7; }
         }
         
+        /* 탭 네비게이션 */
+        .tab-nav {
+            display: flex;
+            background: #141428;
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            color: #8892b0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00d4ff, #0080ff);
+            color: #ffffff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         /* 스텝 카드 */
         .step-card {
             background: #141428;
@@ -118,6 +159,10 @@
             font-weight: bold;
             font-size: 1rem;
             margin-right: 12px;
+        }
+        
+        .step-number.chart {
+            background: linear-gradient(135deg, #ff0080, #ff4757);
         }
         
         .step-title {
@@ -150,6 +195,197 @@
         .step-status.done {
             background: rgba(0, 255, 136, 0.2);
             color: #00ff88;
+        }
+        
+        /* 차트 업로드 영역 */
+        .chart-upload-area {
+            border: 2px dashed #3a3a5a;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-upload-area:hover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        .chart-upload-area.has-image {
+            padding: 10px;
+            border-style: solid;
+            border-color: #00ff88;
+        }
+        
+        .chart-upload-area .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .chart-upload-area .upload-text {
+            font-size: 0.95rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        
+        .chart-upload-area .upload-hint {
+            font-size: 0.8rem;
+            color: #8892b0;
+        }
+        
+        .chart-upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .chart-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        .chart-preview-container {
+            position: relative;
+        }
+        
+        .remove-chart-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 71, 87, 0.9);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 차트 소스 선택 */
+        .chart-source-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .chart-source-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #3a3a5a;
+            border-radius: 12px;
+            background: #1e1e3c;
+            color: #8892b0;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .chart-source-btn.active {
+            border-color: #00d4ff;
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .chart-source-btn .icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        /* 타임프레임 선택 */
+        .timeframe-section {
+            margin-bottom: 15px;
+        }
+        
+        .timeframe-section h4 {
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        
+        .timeframe-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .timeframe-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #1e1e3c;
+            border: 1px solid #3a3a5a;
+            color: #8892b0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .timeframe-btn.active {
+            background: linear-gradient(135deg, #ff0080, #ff4757);
+            border-color: #ff0080;
+            color: #ffffff;
+        }
+        
+        /* 기술적 분석 입력 */
+        .tech-input-section {
+            background: #1e1e3c;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .tech-input-section h4 {
+            color: #ff0080;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        
+        .tech-input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2a4a;
+        }
+        
+        .tech-input-row:last-child {
+            border-bottom: none;
+        }
+        
+        .tech-input-row label {
+            font-size: 0.85rem;
+            color: #c0c0c0;
+        }
+        
+        .tech-input-row input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            background: #141428;
+            color: #ffffff;
+            font-size: 0.95rem;
+            text-align: right;
+        }
+        
+        .tech-input-row input:focus {
+            outline: none;
+            border-color: #00d4ff;
         }
         
         /* 데이터 가져오기 버튼 */
@@ -371,6 +607,53 @@
             to { transform: rotate(360deg); }
         }
         
+        .loading-text {
+            color: #8892b0;
+            font-size: 0.9rem;
+        }
+        
+        .loading-steps {
+            margin-top: 20px;
+            text-align: left;
+            background: #1e1e3c;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            color: #8892b0;
+        }
+        
+        .loading-step.active {
+            color: #00d4ff;
+        }
+        
+        .loading-step.done {
+            color: #00ff88;
+        }
+        
+        .loading-step .check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .loading-step.done .check {
+            background: #00ff88;
+            border-color: #00ff88;
+            color: #0a0a1a;
+        }
+        
         /* ==================== 결과 영역 ==================== */
         .result-area {
             display: none;
@@ -384,6 +667,35 @@
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 분석 타입 뱃지 */
+        .analysis-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .analysis-type-badge.ndf {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+        
+        .analysis-type-badge.chart {
+            background: rgba(255, 0, 128, 0.2);
+            color: #ff0080;
+            border: 1px solid #ff0080;
+        }
+        
+        .analysis-type-badge.combined {
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.2), rgba(255, 0, 128, 0.2));
+            color: #ffffff;
+            border: 1px solid #8892b0;
         }
         
         /* 메인 시그널 */
@@ -453,6 +765,112 @@
         
         .confidence-value { font-size: 1.1rem; font-weight: bold; color: #ffffff; }
         
+        /* 복합 신뢰도 */
+        .confidence-breakdown {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .confidence-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .confidence-item-label {
+            font-size: 0.7rem;
+            color: #8892b0;
+            margin-bottom: 5px;
+        }
+        
+        .confidence-item-value {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .confidence-item-value.ndf { color: #00d4ff; }
+        .confidence-item-value.chart { color: #ff0080; }
+        
+        /* 차트 분석 결과 */
+        .chart-analysis-result {
+            background: #141428;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ff0080;
+        }
+        
+        .chart-analysis-result h3 {
+            color: #ff0080;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pattern-detected {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .pattern-tag {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pattern-tag.bullish {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+        
+        .pattern-tag.bearish {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+            border: 1px solid #ff4757;
+        }
+        
+        .pattern-tag.neutral {
+            background: rgba(255, 211, 42, 0.2);
+            color: #ffd32a;
+            border: 1px solid #ffd32a;
+        }
+        
+        .level-list {
+            margin-top: 15px;
+        }
+        
+        .level-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: #1e1e3c;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .level-item .level-type {
+            font-size: 0.85rem;
+            color: #8892b0;
+        }
+        
+        .level-item .level-value {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .level-item .level-value.resistance { color: #ff4757; }
+        .level-item .level-value.support { color: #00ff88; }
+        .level-item .level-value.current { color: #00d4ff; }
+        
         /* 가격 가이드 */
         .price-guide {
             background: #141428;
@@ -518,6 +936,29 @@
         .price-value .change.positive { color: #00ff88; }
         .price-value .change.negative { color: #ff4757; }
         
+        /* 분석 근거 표시 */
+        .price-basis {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .basis-tag {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+        
+        .basis-tag.ndf {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        
+        .basis-tag.chart {
+            background: rgba(255, 0, 128, 0.2);
+            color: #ff0080;
+        }
+        
         /* 수익/손실 카드 */
         .profit-loss-row {
             display: grid;
@@ -549,6 +990,37 @@
         .loss-amount { font-size: 1.5rem; font-weight: bold; color: #ff4757; }
         
         .profit-desc, .loss-desc { font-size: 0.75rem; color: #8892b0; margin-top: 5px; }
+        
+        /* 리스크/리워드 비율 */
+        .rr-ratio {
+            background: #141428;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #2a2a4a;
+        }
+        
+        .rr-ratio h4 {
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        
+        .rr-value {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00d4ff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .rr-desc {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-top: 8px;
+        }
         
         /* 전략 섹션 */
         .strategy-section {
@@ -687,102 +1159,336 @@
         
         <!-- 헤더 -->
         <header class="header">
-            <h1>💱 오늘의 환율 트레이딩</h1>
-            <p class="subtitle">버튼 하나로 오늘 사고팔 가격을 알려드려요!</p>
+            <h1>💱 FX 환율 차트 분석 가이드</h1>
+            <p class="subtitle">NDF + 차트 패턴 복합 분석으로 정확한 매매 포인트!</p>
             
             <div class="clock-box">
-                <div class="clock" id="clock">🇰🇷 2025-01-01 08:30:00</div>
-                <div class="market-status" id="marketStatus">🟡 NDF 확인 최적 시간!</div>
+                <div class="clock" id="clock">🇰🇷 2026-01-12 13:55:00</div>
+                <div class="market-status" id="marketStatus">🟢 한국 시장 거래 중</div>
             </div>
         </header>
         
-        <!-- ==================== STEP 1: 전일 종가 ==================== -->
-        <div class="step-card">
-            <div class="step-header">
-                <div class="step-number">1</div>
-                <div class="step-title">
-                    <h3>📊 전일 종가 가져오기</h3>
-                    <p>Investing.com에서 어제 마감가 확인</p>
+        <!-- 탭 네비게이션 -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('ndf')">📊 NDF 분석</button>
+            <button class="tab-btn" onclick="switchTab('chart')">📈 차트 분석</button>
+            <button class="tab-btn" onclick="switchTab('combined')">🔥 복합 분석</button>
+        </div>
+        
+        <!-- ==================== NDF 분석 탭 ==================== -->
+        <div class="tab-content active" id="tab-ndf">
+            
+            <!-- STEP 1: 전일 종가 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">
+                        <h3>📊 전일 종가 가져오기</h3>
+                        <p>Investing.com에서 어제 마감가 확인</p>
+                    </div>
+                    <div class="step-status pending" id="step1Status">대기중</div>
                 </div>
-                <div class="step-status pending" id="step1Status">대기중</div>
-            </div>
-            
-            <button class="fetch-btn investing" onclick="openInvesting()">
-                <span class="icon">📊</span>
-                <span>Investing.com 열기 → 종가 확인</span>
-            </button>
-            
-            <div class="input-row">
-                <label>전일 종가</label>
-                <input type="number" id="prevClose" placeholder="1438.50" step="0.01" inputmode="decimal" onchange="checkStep1()">
-                <span class="unit">원</span>
-            </div>
-            
-            <div class="help-text">
-                💡 <strong>찾는 방법:</strong> 페이지 상단의 <strong>"종가"</strong> 또는 <strong>"이전 종가"</strong> 숫자를 입력하세요!
-            </div>
-        </div>
-        
-        <!-- ==================== STEP 2: NDF 환율 ==================== -->
-        <div class="step-card">
-            <div class="step-header">
-                <div class="step-number">2</div>
-                <div class="step-title">
-                    <h3>🌙 현재 NDF 가져오기</h3>
-                    <p>Barchart에서 역외환율 확인</p>
+                
+                <button class="fetch-btn investing" onclick="openInvesting()">
+                    <span class="icon">📊</span>
+                    <span>Investing.com 열기 → 종가 확인</span>
+                </button>
+                
+                <div class="input-row">
+                    <label>전일 종가</label>
+                    <input type="number" id="prevClose" placeholder="1438.50" step="0.01" inputmode="decimal" onchange="checkStep1()">
+                    <span class="unit">원</span>
                 </div>
-                <div class="step-status pending" id="step2Status">대기중</div>
+                
+                <div class="help-text">
+                    💡 <strong>찾는 방법:</strong> 페이지 상단의 <strong>"종가"</strong> 또는 <strong>"이전 종가"</strong> 숫자를 입력하세요!
+                </div>
             </div>
             
-            <button class="fetch-btn barchart" onclick="openBarchart()">
-                <span class="icon">📈</span>
-                <span>Barchart 열기 → NDF 확인</span>
+            <!-- STEP 2: NDF 환율 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">
+                        <h3>🌙 현재 NDF 가져오기</h3>
+                        <p>Barchart에서 역외환율 확인</p>
+                    </div>
+                    <div class="step-status pending" id="step2Status">대기중</div>
+                </div>
+                
+                <button class="fetch-btn barchart" onclick="openBarchart()">
+                    <span class="icon">📈</span>
+                    <span>Barchart 열기 → NDF 확인</span>
+                </button>
+                
+                <div class="input-row">
+                    <label>NDF 현재가</label>
+                    <input type="number" id="ndfRate" placeholder="1455.20" step="0.01" inputmode="decimal" onchange="checkStep2()">
+                    <span class="unit">원</span>
+                </div>
+                
+                <div class="help-text">
+                    💡 <strong>찾는 방법:</strong> 페이지 <strong>상단의 가장 큰 숫자</strong>가 현재 NDF입니다!
+                </div>
+            </div>
+            
+            <!-- 투자금 -->
+            <div class="invest-section">
+                <h4>💰 투자 예정 금액 (선택사항)</h4>
+                
+                <div class="invest-options">
+                    <div class="invest-option" onclick="setInvestment(500000)">50만원</div>
+                    <div class="invest-option active" onclick="setInvestment(1000000)">100만원</div>
+                    <div class="invest-option" onclick="setInvestment(3000000)">300만원</div>
+                    <div class="invest-option" onclick="setInvestment(5000000)">500만원</div>
+                </div>
+                
+                <div class="invest-custom">
+                    <span>직접 입력:</span>
+                    <input type="number" id="investment" value="1000000" step="100000" inputmode="numeric">
+                    <span>원</span>
+                </div>
+            </div>
+            
+            <!-- 분석 버튼 -->
+            <button class="analyze-btn" id="analyzeBtnNdf" onclick="analyzeNdf()">
+                🚀 NDF 기반 매매 가이드 받기
+                <span class="sub-text">전일 종가와 NDF를 입력하면 분석해드려요!</span>
             </button>
-            
-            <div class="input-row">
-                <label>NDF 현재가</label>
-                <input type="number" id="ndfRate" placeholder="1455.20" step="0.01" inputmode="decimal" onchange="checkStep2()">
-                <span class="unit">원</span>
-            </div>
-            
-            <div class="help-text">
-                💡 <strong>찾는 방법:</strong> 페이지 <strong>상단의 가장 큰 숫자</strong>가 현재 NDF입니다!<br>
-                (예: 1,455.20 또는 1455.20)
-            </div>
         </div>
         
-        <!-- ==================== STEP 3: 투자금 ==================== -->
-        <div class="invest-section">
-            <h4>💰 투자 예정 금액 (선택사항)</h4>
+        <!-- ==================== 차트 분석 탭 ==================== -->
+        <div class="tab-content" id="tab-chart">
             
-            <div class="invest-options">
-                <div class="invest-option" onclick="setInvestment(500000)">50만원</div>
-                <div class="invest-option active" onclick="setInvestment(1000000)">100만원</div>
-                <div class="invest-option" onclick="setInvestment(3000000)">300만원</div>
-                <div class="invest-option" onclick="setInvestment(5000000)">500만원</div>
+            <!-- 차트 업로드 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number chart">1</div>
+                    <div class="step-title">
+                        <h3>📸 차트 이미지 업로드</h3>
+                        <p>인베스팅 또는 트레이딩뷰 차트 캡처</p>
+                    </div>
+                    <div class="step-status pending" id="chartUploadStatus">대기중</div>
+                </div>
+                
+                <!-- 차트 소스 선택 -->
+                <div class="chart-source-options">
+                    <button class="chart-source-btn active" onclick="selectChartSource('investing')">
+                        <span class="icon">📊</span>
+                        Investing
+                    </button>
+                    <button class="chart-source-btn" onclick="selectChartSource('tradingview')">
+                        <span class="icon">📈</span>
+                        TradingView
+                    </button>
+                    <button class="chart-source-btn" onclick="selectChartSource('other')">
+                        <span class="icon">📱</span>
+                        기타
+                    </button>
+                </div>
+                
+                <!-- 업로드 영역 -->
+                <div class="chart-upload-area" id="chartUploadArea">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">차트 이미지를 업로드하세요</div>
+                    <div class="upload-hint">클릭하거나 이미지를 드래그하세요<br>(PNG, JPG, WEBP)</div>
+                    <input type="file" id="chartFileInput" accept="image/*" onchange="handleChartUpload(event)">
+                </div>
+                
+                <!-- 차트 미리보기 -->
+                <div class="chart-preview-container" id="chartPreviewContainer" style="display: none;">
+                    <img id="chartPreview" class="chart-preview" src="" alt="차트 미리보기">
+                    <button class="remove-chart-btn" onclick="removeChart()">×</button>
+                </div>
+                
+                <div class="help-text">
+                    💡 <strong>팁:</strong> 1시간봉 또는 일봉 차트가 분석에 가장 효과적이에요!
+                </div>
             </div>
             
-            <div class="invest-custom">
-                <span>직접 입력:</span>
-                <input type="number" id="investment" value="1000000" step="100000" inputmode="numeric">
-                <span>원</span>
+            <!-- 타임프레임 선택 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number chart">2</div>
+                    <div class="step-title">
+                        <h3>⏰ 차트 타임프레임</h3>
+                        <p>업로드한 차트의 시간 단위 선택</p>
+                    </div>
+                </div>
+                
+                <div class="timeframe-options">
+                    <button class="timeframe-btn" onclick="setTimeframe('5m')">5분</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('15m')">15분</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('1h')" id="tf1h">1시간</button>
+                    <button class="timeframe-btn active" onclick="setTimeframe('4h')">4시간</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('1d')">일봉</button>
+                    <button class="timeframe-btn" onclick="setTimeframe('1w')">주봉</button>
+                </div>
             </div>
+            
+            <!-- 기술적 분석 수동 입력 (선택사항) -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number chart">3</div>
+                    <div class="step-title">
+                        <h3>📝 차트에서 읽은 값 입력</h3>
+                        <p>지지선/저항선 등 (선택사항)</p>
+                    </div>
+                </div>
+                
+                <div class="tech-input-section">
+                    <h4>📍 가격 레벨</h4>
+                    <div class="tech-input-row">
+                        <label>현재가</label>
+                        <input type="number" id="chartCurrentPrice" placeholder="1455.00" step="0.01">
+                    </div>
+                    <div class="tech-input-row">
+                        <label>1차 저항선</label>
+                        <input type="number" id="chartResistance1" placeholder="1470.00" step="0.01">
+                    </div>
+                    <div class="tech-input-row">
+                        <label>2차 저항선</label>
+                        <input type="number" id="chartResistance2" placeholder="1485.00" step="0.01">
+                    </div>
+                    <div class="tech-input-row">
+                        <label>1차 지지선</label>
+                        <input type="number" id="chartSupport1" placeholder="1440.00" step="0.01">
+                    </div>
+                    <div class="tech-input-row">
+                        <label>2차 지지선</label>
+                        <input type="number" id="chartSupport2" placeholder="1425.00" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="tech-input-section">
+                    <h4>📊 기술적 지표 (선택사항)</h4>
+                    <div class="tech-input-row">
+                        <label>RSI (0-100)</label>
+                        <input type="number" id="chartRsi" placeholder="65" min="0" max="100">
+                    </div>
+                    <div class="tech-input-row">
+                        <label>추세 방향</label>
+                        <select id="chartTrend" style="width: 120px; padding: 8px; border-radius: 8px; background: #141428; color: #fff; border: 1px solid #3a3a5a;">
+                            <option value="">선택</option>
+                            <option value="up">상승 추세</option>
+                            <option value="down">하락 추세</option>
+                            <option value="sideways">횡보</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="help-text">
+                    💡 차트에서 눈에 띄는 <strong>수평선(지지/저항)</strong>이 있으면 입력하세요. 없으면 AI가 자동 분석합니다!
+                </div>
+            </div>
+            
+            <!-- 투자금 -->
+            <div class="invest-section">
+                <h4>💰 투자 예정 금액 (선택사항)</h4>
+                <div class="invest-options">
+                    <div class="invest-option" onclick="setInvestment(500000)">50만원</div>
+                    <div class="invest-option active" onclick="setInvestment(1000000)">100만원</div>
+                    <div class="invest-option" onclick="setInvestment(3000000)">300만원</div>
+                    <div class="invest-option" onclick="setInvestment(5000000)">500만원</div>
+                </div>
+                <div class="invest-custom">
+                    <span>직접 입력:</span>
+                    <input type="number" id="investmentChart" value="1000000" step="100000" inputmode="numeric">
+                    <span>원</span>
+                </div>
+            </div>
+            
+            <!-- 분석 버튼 -->
+            <button class="analyze-btn" id="analyzeBtnChart" onclick="analyzeChart()">
+                🔍 차트 패턴 분석하기
+                <span class="sub-text">차트 이미지와 가격 레벨로 매매 포인트 분석!</span>
+            </button>
         </div>
         
-        <!-- ==================== 분석 버튼 ==================== -->
-        <button class="analyze-btn" id="analyzeBtn" onclick="analyzeMarket()">
-            🚀 오늘의 매매 가이드 받기
-            <span class="sub-text">위 2가지를 입력하면 바로 분석해드려요!</span>
-        </button>
+        <!-- ==================== 복합 분석 탭 ==================== -->
+        <div class="tab-content" id="tab-combined">
+            
+            <div class="step-card" style="border-color: #ff0080;">
+                <div class="step-header">
+                    <div class="step-number" style="background: linear-gradient(135deg, #00d4ff, #ff0080);">★</div>
+                    <div class="step-title">
+                        <h3>🔥 NDF + 차트 복합 분석</h3>
+                        <p>두 가지 분석을 결합한 최강 시그널</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding: 20px 0;">
+                    <p style="color: #8892b0; font-size: 0.9rem; margin-bottom: 15px;">
+                        NDF 분석과 차트 분석을 <strong style="color: #ff0080;">모두 완료</strong>한 후<br>
+                        복합 시그널을 받아보세요!
+                    </p>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                        <div style="text-align: center;">
+                            <div id="ndfCheckIcon" style="font-size: 2rem;">⬜</div>
+                            <div style="font-size: 0.8rem; color: #8892b0;">NDF 분석</div>
+                        </div>
+                        <div style="font-size: 2rem; color: #3a3a5a;">+</div>
+                        <div style="text-align: center;">
+                            <div id="chartCheckIcon" style="font-size: 2rem;">⬜</div>
+                            <div style="font-size: 0.8rem; color: #8892b0;">차트 분석</div>
+                        </div>
+                        <div style="font-size: 2rem; color: #3a3a5a;">=</div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem;">🔥</div>
+                            <div style="font-size: 0.8rem; color: #ff0080;">복합 시그널</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="analyze-btn" id="analyzeBtnCombined" onclick="analyzeCombined()" disabled>
+                    🔥 복합 분석 시작
+                    <span class="sub-text">NDF와 차트 분석을 먼저 완료하세요</span>
+                </button>
+            </div>
+            
+            <div class="help-text" style="background: rgba(255, 0, 128, 0.1); border-color: rgba(255, 0, 128, 0.3); color: #ff0080;">
+                💡 <strong>복합 분석의 장점:</strong><br>
+                • NDF 갭 방향 + 차트 패턴 방향이 일치하면 신뢰도 UP<br>
+                • 지지/저항선을 고려한 정밀한 진입가 산출<br>
+                • 리스크/리워드 비율 최적화
+            </div>
+        </div>
         
         <!-- 로딩 -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>시장을 분석하고 있어요...</p>
+            <p class="loading-text">분석 중입니다...</p>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step" id="loadStep1">
+                    <div class="check">1</div>
+                    <span>데이터 검증 중...</span>
+                </div>
+                <div class="loading-step" id="loadStep2">
+                    <div class="check">2</div>
+                    <span>패턴 분석 중...</span>
+                </div>
+                <div class="loading-step" id="loadStep3">
+                    <div class="check">3</div>
+                    <span>매매 포인트 계산 중...</span>
+                </div>
+                <div class="loading-step" id="loadStep4">
+                    <div class="check">4</div>
+                    <span>전략 생성 중...</span>
+                </div>
+            </div>
         </div>
         
         <!-- ==================== 결과 영역 ==================== -->
         <div class="result-area" id="resultArea">
+            
+            <!-- 분석 타입 뱃지 -->
+            <div style="text-align: center;">
+                <div class="analysis-type-badge ndf" id="analysisTypeBadge">
+                    <span>📊</span>
+                    <span>NDF 기반 분석</span>
+                </div>
+            </div>
             
             <!-- 메인 시그널 -->
             <div class="main-signal" id="mainSignal">
@@ -798,6 +1504,52 @@
                     </div>
                     <div class="confidence-value" id="confidenceValue">85%</div>
                 </div>
+                
+                <!-- 복합 분석 시 신뢰도 분해 -->
+                <div class="confidence-breakdown" id="confidenceBreakdown" style="display: none;">
+                    <div class="confidence-item">
+                        <div class="confidence-item-label">NDF 시그널</div>
+                        <div class="confidence-item-value ndf" id="ndfConfidence">75%</div>
+                    </div>
+                    <div class="confidence-item">
+                        <div class="confidence-item-label">차트 시그널</div>
+                        <div class="confidence-item-value chart" id="chartConfidence">80%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 차트 분석 결과 (차트 분석 시에만 표시) -->
+            <div class="chart-analysis-result" id="chartAnalysisResult" style="display: none;">
+                <h3>📈 차트 패턴 분석 결과</h3>
+                
+                <div class="pattern-detected" id="patternDetected">
+                    <span class="pattern-tag bullish">상승 추세선</span>
+                    <span class="pattern-tag bullish">골든크로스</span>
+                    <span class="pattern-tag neutral">RSI 중립</span>
+                </div>
+                
+                <div class="level-list">
+                    <div class="level-item">
+                        <span class="level-type">2차 저항선</span>
+                        <span class="level-value resistance" id="res2Value">1,485원</span>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-type">1차 저항선</span>
+                        <span class="level-value resistance" id="res1Value">1,470원</span>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-type">📍 현재가</span>
+                        <span class="level-value current" id="currentValue">1,455원</span>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-type">1차 지지선</span>
+                        <span class="level-value support" id="sup1Value">1,440원</span>
+                    </div>
+                    <div class="level-item">
+                        <span class="level-type">2차 지지선</span>
+                        <span class="level-value support" id="sup2Value">1,425원</span>
+                    </div>
+                </div>
             </div>
             
             <!-- 가격 가이드 -->
@@ -810,6 +1562,9 @@
                         <div class="price-text">
                             <div class="main-label">진입가</div>
                             <div class="sub-label">이 가격에 시작하세요</div>
+                            <div class="price-basis" id="entryBasis">
+                                <span class="basis-tag ndf">NDF</span>
+                            </div>
                         </div>
                     </div>
                     <div class="price-value">
@@ -824,6 +1579,9 @@
                         <div class="price-text">
                             <div class="main-label">목표가</div>
                             <div class="sub-label">여기서 수익 실현!</div>
+                            <div class="price-basis" id="targetBasis">
+                                <span class="basis-tag ndf">NDF</span>
+                            </div>
                         </div>
                     </div>
                     <div class="price-value">
@@ -838,6 +1596,9 @@
                         <div class="price-text">
                             <div class="main-label">손절가</div>
                             <div class="sub-label">여기서 손실 제한!</div>
+                            <div class="price-basis" id="stopBasis">
+                                <span class="basis-tag ndf">NDF</span>
+                            </div>
                         </div>
                     </div>
                     <div class="price-value">
@@ -845,6 +1606,13 @@
                         <div class="change negative" id="stopChange">-11.00원 (-0.76%)</div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- 리스크/리워드 비율 -->
+            <div class="rr-ratio">
+                <h4>📐 리스크 / 리워드 비율</h4>
+                <div class="rr-value" id="rrRatio">1 : 1.5</div>
+                <div class="rr-desc" id="rrDesc">손실 대비 1.5배 수익 기대</div>
             </div>
             
             <!-- 수익/손실 -->
@@ -910,6 +1678,10 @@
                     <span class="data-label">예상 방향</span>
                     <span class="data-value" id="dataDir">📈 상승</span>
                 </div>
+                <div class="data-row" id="dataTimeframeRow" style="display: none;">
+                    <span class="data-label">차트 타임프레임</span>
+                    <span class="data-value" id="dataTimeframe">4시간</span>
+                </div>
             </div>
             
             <!-- 주의사항 -->
@@ -917,6 +1689,7 @@
                 <h4>⚠️ 반드시 읽어주세요!</h4>
                 <ul class="warning-list">
                     <li>NDF 시그널 적중률은 약 65~75%입니다 (100%가 아닙니다!)</li>
+                    <li>차트 패턴도 확률적 도구입니다. 맹신하지 마세요!</li>
                     <li>중요 경제 뉴스가 있으면 예측과 다를 수 있어요</li>
                     <li>손절가는 반드시 지켜주세요!</li>
                     <li>처음에는 소액으로 연습하세요</li>
@@ -929,14 +1702,22 @@
         
         <!-- 푸터 -->
         <div class="footer">
-            <p>💱 NDF 원달러 트레이딩 가이드</p>
-            <p>매일 아침 9시 전에 확인하세요!</p>
+            <p>💱 FX 환율 차트 분석 트레이딩 가이드</p>
+            <p>NDF + 기술적 분석으로 정확한 매매 포인트!</p>
             <p style="margin-top: 8px;">※ 투자 책임은 본인에게 있습니다</p>
         </div>
         
     </div>
     
     <script>
+        // ==================== 전역 변수 ====================
+        let currentTab = 'ndf';
+        let chartSource = 'investing';
+        let selectedTimeframe = '4h';
+        let uploadedChartData = null;
+        let ndfAnalysisResult = null;
+        let chartAnalysisResult = null;
+        
         // ==================== 시계 ====================
         function updateClock() {
             const now = new Date();
@@ -986,6 +1767,30 @@
         setInterval(updateClock, 1000);
         updateClock();
         
+        // ==================== 탭 전환 ====================
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // 버튼 활성화
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.remove('active');
+                if ((tabName === 'ndf' && idx === 0) || 
+                    (tabName === 'chart' && idx === 1) || 
+                    (tabName === 'combined' && idx === 2)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // 컨텐츠 표시
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // 결과 영역 숨기기
+            document.getElementById('resultArea').classList.remove('show');
+        }
+        
         // ==================== 데이터 링크 열기 ====================
         function openInvesting() {
             window.open('https://kr.investing.com/currencies/usd-krw', '_blank');
@@ -1025,7 +1830,7 @@
         function checkAnalyzeButton() {
             const prev = document.getElementById('prevClose').value;
             const ndf = document.getElementById('ndfRate').value;
-            const btn = document.getElementById('analyzeBtn');
+            const btn = document.getElementById('analyzeBtnNdf');
             
             if (prev && ndf && parseFloat(prev) > 1000 && parseFloat(ndf) > 1000) {
                 btn.disabled = false;
@@ -1035,45 +1840,132 @@
         }
         
         // 초기 상태
-        document.getElementById('analyzeBtn').disabled = true;
+        document.getElementById('analyzeBtnNdf').disabled = true;
         
         // ==================== 투자금 설정 ====================
         function setInvestment(amount) {
             document.getElementById('investment').value = amount;
+            if (document.getElementById('investmentChart')) {
+                document.getElementById('investmentChart').value = amount;
+            }
             
             // 버튼 스타일 업데이트
             document.querySelectorAll('.invest-option').forEach(btn => {
                 btn.classList.remove('active');
             });
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+        
+        // ==================== 차트 업로드 관련 ====================
+        function selectChartSource(source) {
+            chartSource = source;
+            document.querySelectorAll('.chart-source-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.chart-source-btn').classList.add('active');
+        }
+        
+        function setTimeframe(tf) {
+            selectedTimeframe = tf;
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
             event.target.classList.add('active');
         }
         
-        // ==================== 저장 데이터 로드 ====================
-        function loadSavedData() {
-            const saved = localStorage.getItem('ndfAutoData');
-            if (saved) {
-                const data = JSON.parse(saved);
-                // 오늘 날짜와 비교해서 같은 날이면 로드
-                const today = new Date().toDateString();
-                if (data.date === today) {
-                    if (data.prevClose) {
-                        document.getElementById('prevClose').value = data.prevClose;
-                        checkStep1();
-                    }
-                    if (data.ndfRate) {
-                        document.getElementById('ndfRate').value = data.ndfRate;
-                        checkStep2();
-                    }
-                    if (data.investment) {
-                        document.getElementById('investment').value = data.investment;
-                    }
-                }
+        function handleChartUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedChartData = e.target.result;
+                
+                // 미리보기 표시
+                document.getElementById('chartPreview').src = uploadedChartData;
+                document.getElementById('chartUploadArea').style.display = 'none';
+                document.getElementById('chartPreviewContainer').style.display = 'block';
+                
+                // 상태 업데이트
+                document.getElementById('chartUploadStatus').textContent = '완료 ✓';
+                document.getElementById('chartUploadStatus').className = 'step-status done';
+                
+                // 복합 분석 체크
+                updateCombinedCheck();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function removeChart() {
+            uploadedChartData = null;
+            document.getElementById('chartUploadArea').style.display = 'block';
+            document.getElementById('chartPreviewContainer').style.display = 'none';
+            document.getElementById('chartFileInput').value = '';
+            document.getElementById('chartUploadStatus').textContent = '대기중';
+            document.getElementById('chartUploadStatus').className = 'step-status pending';
+            updateCombinedCheck();
+        }
+        
+        // ==================== 복합 분석 체크 ====================
+        function updateCombinedCheck() {
+            const ndfDone = ndfAnalysisResult !== null;
+            const chartDone = chartAnalysisResult !== null;
+            
+            document.getElementById('ndfCheckIcon').textContent = ndfDone ? '✅' : '⬜';
+            document.getElementById('chartCheckIcon').textContent = chartDone ? '✅' : '⬜';
+            
+            const btn = document.getElementById('analyzeBtnCombined');
+            if (ndfDone && chartDone) {
+                btn.disabled = false;
+                btn.querySelector('.sub-text').textContent = '두 분석이 준비되었습니다!';
+            } else {
+                btn.disabled = true;
+                btn.querySelector('.sub-text').textContent = 'NDF와 차트 분석을 먼저 완료하세요';
             }
         }
-        loadSavedData();
         
-        // ==================== 분석 실행 ====================
-        function analyzeMarket() {
+        // ==================== 로딩 애니메이션 ====================
+        function showLoading(steps) {
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultArea').classList.remove('show');
+            
+            // 로딩 스텝 초기화
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`loadStep${i}`);
+                step.classList.remove('active', 'done');
+            }
+            
+            // 순차적 로딩 표시
+            let currentStep = 0;
+            const stepInterval = setInterval(() => {
+                if (currentStep > 0) {
+                    document.getElementById(`loadStep${currentStep}`).classList.remove('active');
+                    document.getElementById(`loadStep${currentStep}`).classList.add('done');
+                }
+                currentStep++;
+                if (currentStep <= 4) {
+                    document.getElementById(`loadStep${currentStep}`).classList.add('active');
+                } else {
+                    clearInterval(stepInterval);
+                }
+            }, 400);
+            
+            return stepInterval;
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+        
+        // ==================== NDF 분석 ====================
+        function analyzeNdf() {
             const prevClose = parseFloat(document.getElementById('prevClose').value);
             const ndfRate = parseFloat(document.getElementById('ndfRate').value);
             const investment = parseFloat(document.getElementById('investment').value) || 1000000;
@@ -1089,28 +1981,22 @@
                 return;
             }
             
-            // 데이터 저장
-            localStorage.setItem('ndfAutoData', JSON.stringify({
-                prevClose, ndfRate, investment,
-                date: new Date().toDateString()
-            }));
-            
-            // 로딩
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('resultArea').classList.remove('show');
+            const loadingInterval = showLoading();
             
             setTimeout(() => {
-                runAnalysis(prevClose, ndfRate, investment);
-            }, 1000);
+                clearInterval(loadingInterval);
+                const result = runNdfAnalysis(prevClose, ndfRate, investment);
+                ndfAnalysisResult = result;
+                updateCombinedCheck();
+                displayResult(result, 'ndf');
+            }, 2000);
         }
         
-        function runAnalysis(prevClose, ndfRate, investment) {
-            // 핵심 계산
+        function runNdfAnalysis(prevClose, ndfRate, investment) {
             const gap = ndfRate - prevClose;
             const gapPct = (gap / prevClose) * 100;
             const absGap = Math.abs(gap);
             
-            // 시그널 결정
             let signal, signalTitle, signalDesc, signalIcon, signalClass;
             let entryPrice, targetPrice, stopPrice;
             let strategies = [];
@@ -1174,64 +2060,429 @@
             else if (absGap >= 5) confidence = 45 + absGap * 1;
             else confidence = 25 + absGap * 2;
             
-            // 수익/손실 계산
-            const profitPerWon = Math.abs(targetPrice - entryPrice);
-            const lossPerWon = Math.abs(entryPrice - stopPrice);
-            const expectedProfit = (profitPerWon / entryPrice) * investment;
-            const expectedLoss = (lossPerWon / entryPrice) * investment;
+            return {
+                type: 'ndf',
+                signal, signalClass, signalIcon, signalTitle, signalDesc,
+                entryPrice, targetPrice, stopPrice,
+                strategies, confidence,
+                prevClose, ndfRate, gap, gapPct, investment
+            };
+        }
+        
+        // ==================== 차트 분석 ====================
+        function analyzeChart() {
+            const currentPrice = parseFloat(document.getElementById('chartCurrentPrice').value);
+            const resistance1 = parseFloat(document.getElementById('chartResistance1').value);
+            const resistance2 = parseFloat(document.getElementById('chartResistance2').value);
+            const support1 = parseFloat(document.getElementById('chartSupport1').value);
+            const support2 = parseFloat(document.getElementById('chartSupport2').value);
+            const rsi = parseFloat(document.getElementById('chartRsi').value);
+            const trend = document.getElementById('chartTrend').value;
+            const investment = parseFloat(document.getElementById('investmentChart').value) || 1000000;
             
-            // ==================== UI 업데이트 ====================
-            const mainSignal = document.getElementById('mainSignal');
-            mainSignal.className = `main-signal ${signalClass}`;
-            document.getElementById('signalIcon').textContent = signalIcon;
-            document.getElementById('signalTitle').textContent = signalTitle;
-            document.getElementById('signalDesc').textContent = signalDesc;
+            // 최소한 현재가와 지지/저항선 중 하나는 필요
+            if (isNaN(currentPrice)) {
+                alert('현재가를 입력해주세요!');
+                return;
+            }
+            
+            if (isNaN(resistance1) && isNaN(support1)) {
+                alert('최소 1차 저항선 또는 1차 지지선 중 하나는 입력해주세요!');
+                return;
+            }
+            
+            const loadingInterval = showLoading();
             
             setTimeout(() => {
-                document.getElementById('confidenceFill').style.width = `${confidence}%`;
+                clearInterval(loadingInterval);
+                const result = runChartAnalysis({
+                    currentPrice, resistance1, resistance2, support1, support2,
+                    rsi, trend, investment, timeframe: selectedTimeframe
+                });
+                chartAnalysisResult = result;
+                updateCombinedCheck();
+                displayResult(result, 'chart');
+            }, 2000);
+        }
+        
+        function runChartAnalysis(data) {
+            const { currentPrice, resistance1, resistance2, support1, support2, rsi, trend, investment, timeframe } = data;
+            
+            // 패턴 및 시그널 분석
+            let patterns = [];
+            let signal, signalTitle, signalDesc, signalIcon, signalClass;
+            let entryPrice, targetPrice, stopPrice;
+            let confidence = 50;
+            let strategies = [];
+            
+            // RSI 분석
+            if (!isNaN(rsi)) {
+                if (rsi >= 70) {
+                    patterns.push({ name: 'RSI 과매수', type: 'bearish' });
+                    confidence -= 10;
+                } else if (rsi <= 30) {
+                    patterns.push({ name: 'RSI 과매도', type: 'bullish' });
+                    confidence += 10;
+                } else if (rsi >= 45 && rsi <= 55) {
+                    patterns.push({ name: 'RSI 중립', type: 'neutral' });
+                }
+            }
+            
+            // 추세 분석
+            if (trend === 'up') {
+                patterns.push({ name: '상승 추세', type: 'bullish' });
+                confidence += 15;
+            } else if (trend === 'down') {
+                patterns.push({ name: '하락 추세', type: 'bearish' });
+                confidence += 15;
+            } else if (trend === 'sideways') {
+                patterns.push({ name: '횡보 구간', type: 'neutral' });
+            }
+            
+            // 지지/저항 대비 현재가 위치 분석
+            const distToRes1 = !isNaN(resistance1) ? resistance1 - currentPrice : Infinity;
+            const distToSup1 = !isNaN(support1) ? currentPrice - support1 : Infinity;
+            
+            if (distToRes1 < distToSup1) {
+                // 저항선에 가까움
+                patterns.push({ name: '저항선 접근', type: 'bearish' });
+            } else {
+                // 지지선에 가까움
+                patterns.push({ name: '지지선 접근', type: 'bullish' });
+            }
+            
+            // 종합 시그널 결정
+            const bullishPatterns = patterns.filter(p => p.type === 'bullish').length;
+            const bearishPatterns = patterns.filter(p => p.type === 'bearish').length;
+            
+            if (bullishPatterns > bearishPatterns || trend === 'up') {
+                signal = 'SELL_KRW';
+                signalClass = 'sell-krw';
+                signalIcon = '🟢';
+                signalTitle = '원화 매도';
+                signalDesc = '차트상 상승 패턴! 달러 매수 고려';
+                
+                entryPrice = currentPrice;
+                targetPrice = !isNaN(resistance1) ? resistance1 : currentPrice * 1.01;
+                stopPrice = !isNaN(support1) ? support1 : currentPrice * 0.995;
+                
+                confidence += 10;
+                
+                strategies = [
+                    { title: '현재가 근처에서 분할 진입', desc: `${currentPrice.toFixed(0)}원 부근에서 2~3회 분할 매수하세요.` },
+                    { title: `1차 저항선 ${(resistance1 || targetPrice).toFixed(0)}원에서 절반 정리`, desc: '저항선에서 일부 수익 실현하세요.' },
+                    { title: `지지선 ${(support1 || stopPrice).toFixed(0)}원 이탈 시 손절`, desc: '지지선 아래로 내려가면 추세 전환 가능성!' }
+                ];
+                
+            } else if (bearishPatterns > bullishPatterns || trend === 'down') {
+                signal = 'BUY_KRW';
+                signalClass = 'buy-krw';
+                signalIcon = '🔴';
+                signalTitle = '원화 매수';
+                signalDesc = '차트상 하락 패턴! 달러 매도 고려';
+                
+                entryPrice = currentPrice;
+                targetPrice = !isNaN(support1) ? support1 : currentPrice * 0.99;
+                stopPrice = !isNaN(resistance1) ? resistance1 : currentPrice * 1.005;
+                
+                confidence += 10;
+                
+                strategies = [
+                    { title: '현재가 근처에서 분할 진입', desc: `${currentPrice.toFixed(0)}원 부근에서 2~3회 분할 매도하세요.` },
+                    { title: `1차 지지선 ${(support1 || targetPrice).toFixed(0)}원에서 절반 정리`, desc: '지지선에서 일부 수익 실현하세요.' },
+                    { title: `저항선 ${(resistance1 || stopPrice).toFixed(0)}원 돌파 시 손절`, desc: '저항선 위로 올라가면 추세 전환 가능성!' }
+                ];
+                
+            } else {
+                signal = 'HOLD';
+                signalClass = 'hold';
+                signalIcon = '🟡';
+                signalTitle = '관망';
+                signalDesc = '차트 패턴이 불분명해요';
+                
+                entryPrice = currentPrice;
+                targetPrice = currentPrice + 5;
+                stopPrice = currentPrice - 5;
+                
+                strategies = [
+                    { title: '명확한 방향 대기', desc: '지지선이나 저항선 돌파를 확인한 후 진입하세요.' },
+                    { title: '거래량 확인', desc: '거래량 증가와 함께 방향이 나오면 신뢰도가 높아요.' },
+                    { title: '무리한 진입 금지', desc: '횡보 구간에서는 손실 가능성이 높아요.' }
+                ];
+            }
+            
+            confidence = Math.min(95, Math.max(25, confidence));
+            
+            return {
+                type: 'chart',
+                signal, signalClass, signalIcon, signalTitle, signalDesc,
+                entryPrice, targetPrice, stopPrice,
+                strategies, confidence,
+                patterns,
+                currentPrice, resistance1, resistance2, support1, support2,
+                rsi, trend, investment, timeframe
+            };
+        }
+        
+        // ==================== 복합 분석 ====================
+        function analyzeCombined() {
+            if (!ndfAnalysisResult || !chartAnalysisResult) {
+                alert('NDF 분석과 차트 분석을 먼저 완료해주세요!');
+                return;
+            }
+            
+            const loadingInterval = showLoading();
+            
+            setTimeout(() => {
+                clearInterval(loadingInterval);
+                const result = runCombinedAnalysis(ndfAnalysisResult, chartAnalysisResult);
+                displayResult(result, 'combined');
+            }, 2500);
+        }
+        
+        function runCombinedAnalysis(ndf, chart) {
+            // 시그널 일치 여부 확인
+            const signalsMatch = ndf.signal === chart.signal;
+            
+            let signal, signalTitle, signalDesc, signalIcon, signalClass;
+            let entryPrice, targetPrice, stopPrice;
+            let strategies = [];
+            let confidence;
+            
+            if (signalsMatch && ndf.signal !== 'HOLD') {
+                // 시그널 일치 - 높은 신뢰도
+                signal = ndf.signal;
+                signalClass = ndf.signalClass;
+                signalIcon = ndf.signalIcon;
+                signalTitle = ndf.signalTitle;
+                signalDesc = '🔥 NDF + 차트 시그널 일치! 강력 추천';
+                
+                // 가격은 차트 기반 (더 정밀)
+                entryPrice = chart.entryPrice;
+                
+                // 목표가: NDF 목표가와 차트 저항선 중 가까운 것
+                if (signal === 'SELL_KRW') {
+                    targetPrice = Math.min(ndf.targetPrice, chart.targetPrice);
+                    stopPrice = Math.max(ndf.stopPrice, chart.stopPrice);
+                } else {
+                    targetPrice = Math.max(ndf.targetPrice, chart.targetPrice);
+                    stopPrice = Math.min(ndf.stopPrice, chart.stopPrice);
+                }
+                
+                // 신뢰도 부스트
+                confidence = Math.min(95, (ndf.confidence + chart.confidence) / 2 + 15);
+                
+                strategies = [
+                    { title: '✨ 두 시그널 일치로 적극 진입', desc: `NDF와 차트가 같은 방향! ${entryPrice.toFixed(0)}원에서 진입하세요.` },
+                    { title: `목표가 ${targetPrice.toFixed(0)}원 (보수적)`, desc: 'NDF와 차트 목표 중 가까운 가격으로 안전하게!' },
+                    { title: `손절가 ${stopPrice.toFixed(0)}원 (안전)`, desc: '두 분석의 손절 중 안전한 가격으로 설정!' }
+                ];
+                
+            } else if (signalsMatch && ndf.signal === 'HOLD') {
+                // 둘 다 관망
+                signal = 'HOLD';
+                signalClass = 'hold';
+                signalIcon = '🟡';
+                signalTitle = '관망';
+                signalDesc = 'NDF와 차트 모두 방향 불분명';
+                
+                entryPrice = chart.currentPrice;
+                targetPrice = entryPrice + 5;
+                stopPrice = entryPrice - 5;
+                confidence = 30;
+                
+                strategies = [
+                    { title: '오늘은 쉬세요', desc: '두 분석 모두 방향이 불분명합니다.' },
+                    { title: '오후 추이 관찰', desc: '명확한 방향이 나올 때까지 대기하세요.' },
+                    { title: '내일 다시 분석', desc: '무리한 진입보다 기다림이 수익!' }
+                ];
+                
+            } else {
+                // 시그널 불일치
+                // NDF를 우선하되 신뢰도 낮춤
+                signal = ndf.signal;
+                signalClass = ndf.signalClass;
+                signalIcon = '⚠️';
+                signalTitle = ndf.signalTitle + ' (주의)';
+                signalDesc = '⚠️ NDF와 차트 시그널 불일치! 신중하게';
+                
+                entryPrice = chart.entryPrice;
+                targetPrice = ndf.targetPrice;
+                stopPrice = Math.max(ndf.stopPrice, chart.stopPrice);
+                
+                confidence = Math.min(60, (ndf.confidence + chart.confidence) / 2 - 10);
+                
+                strategies = [
+                    { title: '⚠️ 소액으로 테스트', desc: '시그널 불일치로 리스크가 높아요. 평소보다 적게 진입!' },
+                    { title: 'NDF 방향 우선', desc: `NDF는 ${ndf.signalTitle}, 차트는 ${chart.signalTitle}. NDF를 따르되 주의!` },
+                    { title: '손절 타이트하게', desc: `${stopPrice.toFixed(0)}원에서 빠르게 손절하세요.` }
+                ];
+            }
+            
+            return {
+                type: 'combined',
+                signal, signalClass, signalIcon, signalTitle, signalDesc,
+                entryPrice, targetPrice, stopPrice,
+                strategies, confidence,
+                ndfConfidence: ndf.confidence,
+                chartConfidence: chart.confidence,
+                signalsMatch,
+                patterns: chart.patterns,
+                prevClose: ndf.prevClose,
+                ndfRate: ndf.ndfRate,
+                gap: ndf.gap,
+                gapPct: ndf.gapPct,
+                currentPrice: chart.currentPrice,
+                resistance1: chart.resistance1,
+                support1: chart.support1,
+                investment: ndf.investment,
+                timeframe: chart.timeframe
+            };
+        }
+        
+        // ==================== 결과 표시 ====================
+        function displayResult(result, type) {
+            hideLoading();
+            
+            const investment = result.investment || 1000000;
+            
+            // 분석 타입 뱃지
+            const badge = document.getElementById('analysisTypeBadge');
+            if (type === 'ndf') {
+                badge.className = 'analysis-type-badge ndf';
+                badge.innerHTML = '<span>📊</span><span>NDF 기반 분석</span>';
+            } else if (type === 'chart') {
+                badge.className = 'analysis-type-badge chart';
+                badge.innerHTML = '<span>📈</span><span>차트 기반 분석</span>';
+            } else {
+                badge.className = 'analysis-type-badge combined';
+                badge.innerHTML = '<span>🔥</span><span>NDF + 차트 복합 분석</span>';
+            }
+            
+            // 메인 시그널
+            const mainSignal = document.getElementById('mainSignal');
+            mainSignal.className = `main-signal ${result.signalClass}`;
+            document.getElementById('signalIcon').textContent = result.signalIcon;
+            document.getElementById('signalTitle').textContent = result.signalTitle;
+            document.getElementById('signalDesc').textContent = result.signalDesc;
+            
+            setTimeout(() => {
+                document.getElementById('confidenceFill').style.width = `${result.confidence}%`;
             }, 100);
-            document.getElementById('confidenceValue').textContent = `${confidence.toFixed(0)}%`;
+            document.getElementById('confidenceValue').textContent = `${result.confidence.toFixed(0)}%`;
+            
+            // 복합 분석 신뢰도 분해
+            const breakdown = document.getElementById('confidenceBreakdown');
+            if (type === 'combined') {
+                breakdown.style.display = 'flex';
+                document.getElementById('ndfConfidence').textContent = `${result.ndfConfidence.toFixed(0)}%`;
+                document.getElementById('chartConfidence').textContent = `${result.chartConfidence.toFixed(0)}%`;
+            } else {
+                breakdown.style.display = 'none';
+            }
+            
+            // 차트 분석 결과
+            const chartResult = document.getElementById('chartAnalysisResult');
+            if ((type === 'chart' || type === 'combined') && result.patterns) {
+                chartResult.style.display = 'block';
+                
+                // 패턴 태그
+                const patternContainer = document.getElementById('patternDetected');
+                patternContainer.innerHTML = result.patterns.map(p => 
+                    `<span class="pattern-tag ${p.type}">${p.name}</span>`
+                ).join('');
+                
+                // 레벨 값
+                if (result.resistance2) document.getElementById('res2Value').textContent = `${result.resistance2.toLocaleString()}원`;
+                if (result.resistance1) document.getElementById('res1Value').textContent = `${result.resistance1.toLocaleString()}원`;
+                if (result.currentPrice) document.getElementById('currentValue').textContent = `${result.currentPrice.toLocaleString()}원`;
+                if (result.support1) document.getElementById('sup1Value').textContent = `${result.support1.toLocaleString()}원`;
+                if (result.support2) document.getElementById('sup2Value').textContent = `${result.support2.toLocaleString()}원`;
+            } else {
+                chartResult.style.display = 'none';
+            }
             
             // 가격 가이드
-            document.getElementById('entryPrice').textContent = `${entryPrice.toLocaleString('ko-KR', {minimumFractionDigits: 0, maximumFractionDigits: 0})}원`;
-            document.getElementById('targetPrice').textContent = `${targetPrice.toLocaleString('ko-KR', {minimumFractionDigits: 0, maximumFractionDigits: 0})}원`;
-            document.getElementById('stopPrice').textContent = `${stopPrice.toLocaleString('ko-KR', {minimumFractionDigits: 0, maximumFractionDigits: 0})}원`;
+            document.getElementById('entryPrice').textContent = `${result.entryPrice.toLocaleString('ko-KR', {minimumFractionDigits: 0, maximumFractionDigits: 0})}원`;
+            document.getElementById('targetPrice').textContent = `${result.targetPrice.toLocaleString('ko-KR', {minimumFractionDigits: 0, maximumFractionDigits: 0})}원`;
+            document.getElementById('stopPrice').textContent = `${result.stopPrice.toLocaleString('ko-KR', {minimumFractionDigits: 0, maximumFractionDigits: 0})}원`;
             
-            const targetDiff = targetPrice - entryPrice;
-            const targetPct = (targetDiff / entryPrice) * 100;
+            const targetDiff = result.targetPrice - result.entryPrice;
+            const targetPct = (targetDiff / result.entryPrice) * 100;
             document.getElementById('targetChange').textContent = `${targetDiff >= 0 ? '+' : ''}${targetDiff.toFixed(0)}원 (${targetPct >= 0 ? '+' : ''}${targetPct.toFixed(2)}%)`;
             document.getElementById('targetChange').className = `change ${targetDiff >= 0 ? 'positive' : 'negative'}`;
             
-            const stopDiff = stopPrice - entryPrice;
-            const stopPct = (stopDiff / entryPrice) * 100;
+            const stopDiff = result.stopPrice - result.entryPrice;
+            const stopPct = (stopDiff / result.entryPrice) * 100;
             document.getElementById('stopChange').textContent = `${stopDiff >= 0 ? '+' : ''}${stopDiff.toFixed(0)}원 (${stopPct >= 0 ? '+' : ''}${stopPct.toFixed(2)}%)`;
             document.getElementById('stopChange').className = `change ${stopDiff >= 0 ? 'positive' : 'negative'}`;
             
+            // 분석 근거 태그
+            const entryBasis = document.getElementById('entryBasis');
+            const targetBasis = document.getElementById('targetBasis');
+            const stopBasis = document.getElementById('stopBasis');
+            
+            if (type === 'ndf') {
+                entryBasis.innerHTML = '<span class="basis-tag ndf">NDF 갭</span>';
+                targetBasis.innerHTML = '<span class="basis-tag ndf">NDF 목표</span>';
+                stopBasis.innerHTML = '<span class="basis-tag ndf">NDF 손절</span>';
+            } else if (type === 'chart') {
+                entryBasis.innerHTML = '<span class="basis-tag chart">현재가</span>';
+                targetBasis.innerHTML = '<span class="basis-tag chart">저항/지지선</span>';
+                stopBasis.innerHTML = '<span class="basis-tag chart">지지/저항선</span>';
+            } else {
+                entryBasis.innerHTML = '<span class="basis-tag chart">차트</span>';
+                targetBasis.innerHTML = '<span class="basis-tag ndf">NDF</span><span class="basis-tag chart">차트</span>';
+                stopBasis.innerHTML = '<span class="basis-tag ndf">NDF</span><span class="basis-tag chart">차트</span>';
+            }
+            
+            // 리스크/리워드 비율
+            const profitPerWon = Math.abs(result.targetPrice - result.entryPrice);
+            const lossPerWon = Math.abs(result.entryPrice - result.stopPrice);
+            const rrRatio = lossPerWon > 0 ? (profitPerWon / lossPerWon).toFixed(2) : 1;
+            
+            document.getElementById('rrRatio').textContent = `1 : ${rrRatio}`;
+            if (rrRatio >= 2) {
+                document.getElementById('rrDesc').textContent = `손실 대비 ${rrRatio}배 수익! 좋은 기회!`;
+            } else if (rrRatio >= 1) {
+                document.getElementById('rrDesc').textContent = `손실 대비 ${rrRatio}배 수익 기대`;
+            } else {
+                document.getElementById('rrDesc').textContent = `리스크가 높아요. 신중하게!`;
+            }
+            
             // 수익/손실
+            const expectedProfit = (profitPerWon / result.entryPrice) * investment;
+            const expectedLoss = (lossPerWon / result.entryPrice) * investment;
+            
             document.getElementById('maxProfit').textContent = `+${Math.round(expectedProfit).toLocaleString()}원`;
             document.getElementById('profitDesc').textContent = `${(investment/10000).toFixed(0)}만원 투자 기준`;
             document.getElementById('maxLoss').textContent = `-${Math.round(expectedLoss).toLocaleString()}원`;
             document.getElementById('lossDesc').textContent = `손절가 도달 시`;
             
             // 전략
-            strategies.forEach((s, i) => {
+            result.strategies.forEach((s, i) => {
                 document.getElementById(`strat${i+1}Title`).textContent = s.title;
                 document.getElementById(`strat${i+1}Desc`).textContent = s.desc;
             });
             
             // 데이터 요약
-            document.getElementById('dataPrev').textContent = `${prevClose.toLocaleString()}원`;
-            document.getElementById('dataNdf').textContent = `${ndfRate.toLocaleString()}원`;
-            
-            const gapEl = document.getElementById('dataGap');
-            gapEl.textContent = `${gap >= 0 ? '+' : ''}${gap.toFixed(2)}원 (${gapPct >= 0 ? '+' : ''}${gapPct.toFixed(2)}%)`;
-            gapEl.className = `data-value ${gap >= 0 ? 'up' : 'down'}`;
+            if (result.prevClose) {
+                document.getElementById('dataPrev').textContent = `${result.prevClose.toLocaleString()}원`;
+            }
+            if (result.ndfRate) {
+                document.getElementById('dataNdf').textContent = `${result.ndfRate.toLocaleString()}원`;
+            }
+            if (result.gap !== undefined) {
+                const gapEl = document.getElementById('dataGap');
+                gapEl.textContent = `${result.gap >= 0 ? '+' : ''}${result.gap.toFixed(2)}원 (${result.gapPct >= 0 ? '+' : ''}${result.gapPct.toFixed(2)}%)`;
+                gapEl.className = `data-value ${result.gap >= 0 ? 'up' : 'down'}`;
+            }
             
             const dirEl = document.getElementById('dataDir');
-            if (signal === 'SELL_KRW') {
+            if (result.signal === 'SELL_KRW') {
                 dirEl.textContent = '📈 상승 예상';
                 dirEl.className = 'data-value up';
-            } else if (signal === 'BUY_KRW') {
+            } else if (result.signal === 'BUY_KRW') {
                 dirEl.textContent = '📉 하락 예상';
                 dirEl.className = 'data-value down';
             } else {
@@ -1239,8 +2490,17 @@
                 dirEl.className = 'data-value';
             }
             
+            // 타임프레임 (차트 분석 시)
+            const tfRow = document.getElementById('dataTimeframeRow');
+            if (result.timeframe) {
+                tfRow.style.display = 'flex';
+                const tfMap = { '5m': '5분', '15m': '15분', '1h': '1시간', '4h': '4시간', '1d': '일봉', '1w': '주봉' };
+                document.getElementById('dataTimeframe').textContent = tfMap[result.timeframe] || result.timeframe;
+            } else {
+                tfRow.style.display = 'none';
+            }
+            
             // 결과 표시
-            document.getElementById('loading').classList.remove('show');
             document.getElementById('resultArea').classList.add('show');
             document.getElementById('mainSignal').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1248,15 +2508,57 @@
         // ==================== 리셋 ====================
         function resetAll() {
             document.getElementById('resultArea').classList.remove('show');
+            
+            // NDF 탭 리셋
             document.getElementById('prevClose').value = '';
             document.getElementById('ndfRate').value = '';
             document.getElementById('step1Status').textContent = '대기중';
             document.getElementById('step1Status').className = 'step-status pending';
             document.getElementById('step2Status').textContent = '대기중';
             document.getElementById('step2Status').className = 'step-status pending';
-            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('analyzeBtnNdf').disabled = true;
+            
+            // 차트 탭 리셋
+            removeChart();
+            document.getElementById('chartCurrentPrice').value = '';
+            document.getElementById('chartResistance1').value = '';
+            document.getElementById('chartResistance2').value = '';
+            document.getElementById('chartSupport1').value = '';
+            document.getElementById('chartSupport2').value = '';
+            document.getElementById('chartRsi').value = '';
+            document.getElementById('chartTrend').value = '';
+            
+            // 분석 결과 리셋
+            ndfAnalysisResult = null;
+            chartAnalysisResult = null;
+            updateCombinedCheck();
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        
+        // ==================== 저장 데이터 로드 ====================
+        function loadSavedData() {
+            const saved = localStorage.getItem('fxChartAnalysisData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                const today = new Date().toDateString();
+                if (data.date === today) {
+                    if (data.prevClose) {
+                        document.getElementById('prevClose').value = data.prevClose;
+                        checkStep1();
+                    }
+                    if (data.ndfRate) {
+                        document.getElementById('ndfRate').value = data.ndfRate;
+                        checkStep2();
+                    }
+                    if (data.investment) {
+                        document.getElementById('investment').value = data.investment;
+                        document.getElementById('investmentChart').value = data.investment;
+                    }
+                }
+            }
+        }
+        loadSavedData();
     </script>
 </body>
 </html>
