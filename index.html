@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💱 FX 환율 AI 차트 분석 (개선판)</title>
+    <title>💱 FX 환율 AI 차트 분석</title>
     <style>
         * {
             margin: 0;
@@ -202,213 +202,6 @@
         .step-status.analyzing { background: rgba(155, 89, 182, 0.2); color: #9b59b6; animation: pulse 1s infinite; }
         .step-status.error { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
         
-        /* 차트 업로드 */
-        .chart-upload-area {
-            border: 2px dashed #3a3a5a;
-            border-radius: 15px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .chart-upload-area:hover {
-            border-color: #ff0080;
-            background: rgba(255, 0, 128, 0.05);
-        }
-        
-        .chart-upload-area .upload-icon { font-size: 3rem; margin-bottom: 15px; }
-        .chart-upload-area .upload-text { font-size: 0.95rem; color: #ffffff; margin-bottom: 8px; }
-        .chart-upload-area .upload-hint { font-size: 0.8rem; color: #8892b0; }
-        
-        .chart-upload-area input[type="file"] {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        
-        .chart-preview {
-            width: 100%;
-            max-height: 250px;
-            object-fit: contain;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .chart-preview-container { position: relative; }
-        
-        .remove-chart-btn {
-            position: absolute;
-            top: 10px; right: 10px;
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            background: rgba(255, 71, 87, 0.9);
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        /* URL 입력 영역 */
-        .url-input-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #2a2a4a;
-        }
-        
-        .url-input-section label {
-            display: block;
-            font-size: 0.85rem;
-            color: #8892b0;
-            margin-bottom: 8px;
-        }
-        
-        .url-input-row {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .url-input-row input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #3a3a5a;
-            border-radius: 10px;
-            background: #1e1e3c;
-            color: #ffffff;
-            font-size: 0.9rem;
-        }
-        
-        .url-input-row input:focus {
-            outline: 2px solid #ff0080;
-            border-color: #ff0080;
-        }
-        
-        .url-fetch-btn {
-            padding: 12px 16px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #ff0080, #9b59b6);
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        
-        /* AI 분석 진행 */
-        .ai-progress {
-            background: linear-gradient(135deg, #1a1a3a, #2a1a4a);
-            border: 1px solid #9b59b6;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: none;
-        }
-        
-        .ai-progress.show { display: block; }
-        
-        .ai-progress-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-        
-        .ai-spinner {
-            width: 25px; height: 25px;
-            border: 3px solid #2a2a4a;
-            border-top-color: #9b59b6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .ai-progress-header h4 { color: #9b59b6; font-size: 0.95rem; }
-        
-        .ai-progress-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .ai-step {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: rgba(155, 89, 182, 0.1);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #8892b0;
-            transition: all 0.3s;
-        }
-        
-        .ai-step.active { color: #9b59b6; background: rgba(155, 89, 182, 0.2); }
-        .ai-step.done { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
-        .ai-step.done::before { content: '✓ '; }
-        
-        /* AI 결과 */
-        .ai-result-card {
-            background: linear-gradient(135deg, #1a1a3a, #2a1a4a);
-            border: 1px solid #9b59b6;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: none;
-        }
-        
-        .ai-result-card.show { display: block; animation: fadeIn 0.5s ease; }
-        
-        .ai-result-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #3a3a5a;
-        }
-        
-        .ai-result-header h4 { color: #9b59b6; font-size: 1rem; }
-        
-        .ai-badge {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            color: white;
-        }
-        
-        .ai-value-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #2a2a4a;
-        }
-        
-        .ai-value-row:last-child { border-bottom: none; }
-        .ai-value-label { font-size: 0.85rem; color: #8892b0; }
-        .ai-value { font-size: 1rem; font-weight: bold; color: #ffffff; }
-        .ai-value.up { color: #00ff88; }
-        .ai-value.down { color: #ff4757; }
-        .ai-value.neutral { color: #ffd32a; }
-        .ai-value.overbought { color: #ff4757; }
-        .ai-value.oversold { color: #00ff88; }
-        
-        .ai-comment {
-            background: rgba(155, 89, 182, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-        
-        .ai-comment-title { font-size: 0.85rem; color: #9b59b6; margin-bottom: 8px; }
-        .ai-comment-text { font-size: 0.85rem; color: #c0c0c0; line-height: 1.6; }
-        
         /* 입력 필드 */
         .input-row {
             display: flex;
@@ -497,31 +290,6 @@
         .analyze-btn:active:not(:disabled) { transform: scale(0.98); }
         .analyze-btn .sub-text { font-size: 0.75rem; font-weight: normal; opacity: 0.8; display: block; margin-top: 4px; }
         
-        /* 타임프레임 */
-        .timeframe-options {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-        
-        .timeframe-btn {
-            padding: 8px 14px;
-            border-radius: 20px;
-            background: #1e1e3c;
-            border: 1px solid #3a3a5a;
-            color: #8892b0;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .timeframe-btn.active {
-            background: linear-gradient(135deg, #ff0080, #9b59b6);
-            border-color: #ff0080;
-            color: #ffffff;
-        }
-        
         /* 투자금 */
         .invest-section {
             background: #141428;
@@ -576,21 +344,225 @@
         
         .invest-custom span { color: #8892b0; font-size: 0.9rem; }
         
-        /* 도움말 */
-        .help-text {
-            background: rgba(255, 211, 42, 0.1);
-            border: 1px solid rgba(255, 211, 42, 0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 12px;
-            font-size: 0.8rem;
-            color: #ffd32a;
-            line-height: 1.5;
+        /* 수동 입력 섹션 */
+        .manual-input-section {
+            background: #141428;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #ff0080;
         }
         
-        .help-text strong { color: #ffffff; }
-        .help-text.ai { background: rgba(155, 89, 182, 0.1); border-color: rgba(155, 89, 182, 0.3); color: #9b59b6; }
-        .help-text.success { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.3); color: #00ff88; }
+        .manual-input-section h4 {
+            color: #ff0080;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .manual-input-section .section-desc {
+            font-size: 0.8rem;
+            color: #8892b0;
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group-title {
+            font-size: 0.8rem;
+            color: #00d4ff;
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+        
+        .manual-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .manual-input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .manual-input-item label {
+            font-size: 0.75rem;
+            color: #8892b0;
+        }
+        
+        .manual-input-item input {
+            padding: 12px;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            background: #1e1e3c;
+            color: #ffffff;
+            font-size: 1rem;
+            text-align: right;
+        }
+        
+        .manual-input-item input:focus {
+            outline: 2px solid #ff0080;
+            border-color: #ff0080;
+        }
+        
+        .manual-input-item input.required {
+            border-color: #ff0080;
+        }
+        
+        .manual-input-item.full {
+            grid-column: 1 / -1;
+        }
+        
+        .manual-input-item select {
+            padding: 12px;
+            border: 1px solid #3a3a5a;
+            border-radius: 8px;
+            background: #1e1e3c;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+        
+        .required-mark {
+            color: #ff0080;
+            font-weight: bold;
+        }
+        
+        .optional-mark {
+            color: #8892b0;
+            font-size: 0.7rem;
+        }
+        
+        .auto-calc-note {
+            font-size: 0.75rem;
+            color: #ffd32a;
+            text-align: center;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 211, 42, 0.1);
+            border-radius: 8px;
+        }
+        
+        .manual-analyze-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #00d4ff, #0080ff);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .manual-analyze-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* 도움말 */
+        .help-box {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .help-box h5 {
+            color: #9b59b6;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        
+        .help-box ul {
+            list-style: none;
+            font-size: 0.8rem;
+            color: #c0c0c0;
+            line-height: 1.6;
+        }
+        
+        .help-box li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .help-box li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            font-size: 0.7rem;
+        }
+        
+        .help-box .highlight {
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        /* AI 결과 */
+        .ai-result-card {
+            background: linear-gradient(135deg, #1a1a3a, #2a1a4a);
+            border: 1px solid #9b59b6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .ai-result-card.show { display: block; animation: fadeIn 0.5s ease; }
+        
+        .ai-result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #3a3a5a;
+        }
+        
+        .ai-result-header h4 { color: #9b59b6; font-size: 1rem; }
+        
+        .ai-badge {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            color: white;
+        }
+        
+        .ai-value-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2a4a;
+        }
+        
+        .ai-value-row:last-child { border-bottom: none; }
+        .ai-value-label { font-size: 0.85rem; color: #8892b0; }
+        .ai-value { font-size: 1rem; font-weight: bold; color: #ffffff; }
+        .ai-value.up { color: #00ff88; }
+        .ai-value.down { color: #ff4757; }
+        .ai-value.neutral { color: #ffd32a; }
+        .ai-value.overbought { color: #ff4757; }
+        .ai-value.oversold { color: #00ff88; }
+        
+        .ai-comment {
+            background: rgba(155, 89, 182, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .ai-comment-title { font-size: 0.85rem; color: #9b59b6; margin-bottom: 8px; }
+        .ai-comment-text { font-size: 0.85rem; color: #c0c0c0; line-height: 1.6; }
         
         /* ==================== 결과 영역 ==================== */
         .result-area { display: none; }
@@ -881,109 +853,32 @@
             font-size: 0.7rem;
         }
         
-        /* 수동 입력 섹션 */
-        .manual-input-section {
-            background: #141428;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid #3a3a5a;
-        }
-        
-        .manual-input-section h4 {
-            color: #ff0080;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .manual-input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
-        .manual-input-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .manual-input-item label {
-            font-size: 0.75rem;
-            color: #8892b0;
-        }
-        
-        .manual-input-item input {
-            padding: 10px;
-            border: 1px solid #3a3a5a;
-            border-radius: 8px;
-            background: #1e1e3c;
-            color: #ffffff;
-            font-size: 0.95rem;
-            text-align: right;
-        }
-        
-        .manual-input-item input:focus {
-            outline: 2px solid #ff0080;
-            border-color: #ff0080;
-        }
-        
-        .manual-input-item.full {
-            grid-column: 1 / -1;
-        }
-        
-        .manual-input-item select {
-            padding: 10px;
-            border: 1px solid #3a3a5a;
-            border-radius: 8px;
-            background: #1e1e3c;
-            color: #ffffff;
-            font-size: 0.95rem;
-        }
-        
-        .manual-analyze-btn {
+        /* 샘플 버튼 */
+        .sample-btn {
             width: 100%;
-            padding: 15px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(90deg, #00d4ff, #0080ff);
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px dashed #9b59b6;
+            border-radius: 10px;
+            background: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+            font-size: 0.9rem;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .or-divider {
-            text-align: center;
-            color: #8892b0;
-            font-size: 0.85rem;
-            margin: 15px 0;
-            position: relative;
+        .sample-btn:hover {
+            background: rgba(155, 89, 182, 0.2);
         }
-        
-        .or-divider::before,
-        .or-divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: #3a3a5a;
-        }
-        
-        .or-divider::before { left: 0; }
-        .or-divider::after { right: 0; }
     </style>
 </head>
 <body>
     <div class="container">
         
         <header class="header">
-            <h1>💱 FX 환율 AI 차트 분석</h1>
-            <p class="subtitle">차트 캡처 → AI 자동 분석 → 매매 포인트!</p>
-            <div class="free-badge">🆓 무료 · API 키 불필요</div>
+            <h1>💱 FX 환율 차트 분석</h1>
+            <p class="subtitle">기술적 지표 → 매매 시그널 → 수익 실현!</p>
+            <div class="free-badge">📊 볼린저밴드 + RSI 기반 분석</div>
             
             <div class="clock-box">
                 <div class="clock" id="clock">🇰🇷 2026-01-12 14:00:00</div>
@@ -993,7 +888,7 @@
         
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('ndf')">📊 NDF</button>
-            <button class="tab-btn" onclick="switchTab('chart')">🤖 AI차트</button>
+            <button class="tab-btn" onclick="switchTab('chart')">📈 차트분석</button>
             <button class="tab-btn" onclick="switchTab('combined')">🔥 복합</button>
         </div>
         
@@ -1062,169 +957,80 @@
             </button>
         </div>
         
-        <!-- AI 차트 탭 -->
+        <!-- 차트 분석 탭 -->
         <div class="tab-content" id="tab-chart">
-            <div class="step-card">
-                <div class="step-header">
-                    <div class="step-number ai">🤖</div>
-                    <div class="step-title">
-                        <h3>차트 이미지 업로드</h3>
-                        <p>AI가 자동으로 분석해요!</p>
-                    </div>
-                    <div class="step-status pending" id="chartStatus">대기중</div>
-                </div>
-                
-                <div class="chart-upload-area" id="uploadArea">
-                    <div class="upload-icon">📤</div>
-                    <div class="upload-text">차트 이미지를 업로드하세요</div>
-                    <div class="upload-hint">인베스팅/트레이딩뷰 차트 캡처<br>AI가 자동으로 지지/저항선 분석!</div>
-                    <input type="file" id="chartFile" accept="image/*" onchange="handleChartUpload(event)">
-                </div>
-                
-                <div class="chart-preview-container" id="previewContainer" style="display:none;">
-                    <img id="chartPreview" class="chart-preview" src="" alt="차트">
-                    <button class="remove-chart-btn" onclick="removeChart()">×</button>
-                </div>
-                
-                <!-- URL 입력 옵션 -->
-                <div class="url-input-section">
-                    <label>또는 이미지 URL 직접 입력:</label>
-                    <div class="url-input-row">
-                        <input type="text" id="chartUrl" placeholder="https://example.com/chart.png">
-                        <button class="url-fetch-btn" onclick="fetchChartFromUrl()">불러오기</button>
-                    </div>
-                </div>
-                
-                <div class="help-text ai">
-                    🤖 <strong>Pollinations.ai Vision API</strong>를 사용해요. 무료이고 API 키가 필요 없어요!
-                </div>
+            
+            <div class="help-box">
+                <h5>📖 차트에서 값 찾는 방법</h5>
+                <ul>
+                    <li><span class="highlight">현재가</span>: 차트 오른쪽 상단 "시" 또는 "종" 옆 숫자</li>
+                    <li><span class="highlight">RSI</span>: 차트 하단 RSI(14) 옆 숫자 (0~100)</li>
+                    <li><span class="highlight">볼린저 상단</span>: BB 지표의 첫 번째 숫자 (빨간선)</li>
+                    <li><span class="highlight">볼린저 하단</span>: BB 지표의 세 번째 숫자 (파란선)</li>
+                </ul>
             </div>
             
-            <!-- AI 분석 진행 상태 -->
-            <div class="ai-progress" id="aiProgress">
-                <div class="ai-progress-header">
-                    <div class="ai-spinner"></div>
-                    <h4>AI가 차트를 분석하고 있어요...</h4>
-                </div>
-                <div class="ai-progress-steps">
-                    <div class="ai-step" id="aiStep1">이미지 전송 중...</div>
-                    <div class="ai-step" id="aiStep2">차트 패턴 분석 중...</div>
-                    <div class="ai-step" id="aiStep3">지지/저항선 탐지 중...</div>
-                    <div class="ai-step" id="aiStep4">매매 시그널 생성 중...</div>
-                </div>
-            </div>
+            <button class="sample-btn" onclick="fillSampleData()">
+                📋 샘플 데이터로 테스트하기 (업로드된 차트 기준)
+            </button>
             
-            <!-- AI 분석 결과 -->
-            <div class="ai-result-card" id="aiResultCard">
-                <div class="ai-result-header">
-                    <span style="font-size:1.5rem;">🤖</span>
-                    <h4>AI 분석 결과</h4>
-                    <span class="ai-badge">AI Vision</span>
-                </div>
-                
-                <div class="ai-value-row">
-                    <span class="ai-value-label">현재가</span>
-                    <span class="ai-value" id="aiCurrentPrice">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">1차 저항선</span>
-                    <span class="ai-value down" id="aiResistance1">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">2차 저항선</span>
-                    <span class="ai-value down" id="aiResistance2">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">1차 지지선</span>
-                    <span class="ai-value up" id="aiSupport1">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">2차 지지선</span>
-                    <span class="ai-value up" id="aiSupport2">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">RSI</span>
-                    <span class="ai-value" id="aiRSI">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">추세 방향</span>
-                    <span class="ai-value" id="aiTrend">-</span>
-                </div>
-                <div class="ai-value-row">
-                    <span class="ai-value-label">감지 패턴</span>
-                    <span class="ai-value" id="aiPatterns">-</span>
-                </div>
-                
-                <div class="ai-comment">
-                    <div class="ai-comment-title">💬 AI 코멘트</div>
-                    <div class="ai-comment-text" id="aiComment">분석 결과가 여기에 표시됩니다.</div>
-                </div>
-            </div>
-            
-            <div class="or-divider">또는 수동으로 입력</div>
-            
-            <!-- 수동 입력 섹션 -->
-            <div class="manual-input-section" id="manualInputSection">
-                <h4>📝 차트 정보 수동 입력</h4>
-                <p style="font-size:0.8rem;color:#8892b0;text-align:center;margin-bottom:15px;">
-                    AI가 이미지를 읽지 못할 경우 직접 입력하세요
+            <div class="manual-input-section">
+                <h4>📊 차트 지표 입력</h4>
+                <p class="section-desc">
+                    차트에서 보이는 숫자를 입력하세요<br>
+                    <span class="required-mark">*</span> 필수 / 나머지는 자동 계산됨
                 </p>
                 
-                <div class="manual-input-grid">
-                    <div class="manual-input-item">
-                        <label>현재가 (원)</label>
-                        <input type="number" id="manualCurrentPrice" placeholder="1468.14" step="0.01">
-                    </div>
-                    <div class="manual-input-item">
-                        <label>RSI</label>
-                        <input type="number" id="manualRSI" placeholder="73.65" step="0.01">
-                    </div>
-                    <div class="manual-input-item">
-                        <label>볼린저 상단</label>
-                        <input type="number" id="manualBBUpper" placeholder="1478.77" step="0.01">
-                    </div>
-                    <div class="manual-input-item">
-                        <label>볼린저 하단</label>
-                        <input type="number" id="manualBBLower" placeholder="1441.45" step="0.01">
-                    </div>
-                    <div class="manual-input-item">
-                        <label>1차 저항선</label>
-                        <input type="number" id="manualResistance1" placeholder="1478" step="0.01">
-                    </div>
-                    <div class="manual-input-item">
-                        <label>1차 지지선</label>
-                        <input type="number" id="manualSupport1" placeholder="1460" step="0.01">
-                    </div>
-                    <div class="manual-input-item full">
-                        <label>추세 방향</label>
-                        <select id="manualTrend">
-                            <option value="up">📈 상승</option>
-                            <option value="down">📉 하락</option>
-                            <option value="sideways">➡️ 횡보</option>
-                        </select>
+                <div class="input-group">
+                    <div class="input-group-title">📍 필수 입력</div>
+                    <div class="manual-input-grid">
+                        <div class="manual-input-item">
+                            <label>현재가 <span class="required-mark">*</span></label>
+                            <input type="number" id="manualCurrentPrice" placeholder="1468.14" step="0.01" class="required" oninput="checkChartInputs()">
+                        </div>
+                        <div class="manual-input-item">
+                            <label>RSI <span class="required-mark">*</span></label>
+                            <input type="number" id="manualRSI" placeholder="73.65" step="0.01" class="required" oninput="checkChartInputs()">
+                        </div>
                     </div>
                 </div>
                 
-                <button class="manual-analyze-btn" onclick="analyzeManualInput()">
-                    📊 수동 입력으로 분석하기
-                </button>
-            </div>
-            
-            <div class="step-card" id="timeframeCard" style="display:none;">
-                <div class="step-header">
-                    <div class="step-number ai">⏰</div>
-                    <div class="step-title">
-                        <h3>타임프레임</h3>
-                        <p>차트의 시간 단위</p>
+                <div class="input-group">
+                    <div class="input-group-title">📈 볼린저밴드 (선택 - 지지/저항 자동계산)</div>
+                    <div class="manual-input-grid">
+                        <div class="manual-input-item">
+                            <label>볼린저 상단 <span class="optional-mark">(저항선)</span></label>
+                            <input type="number" id="manualBBUpper" placeholder="1478.77" step="0.01">
+                        </div>
+                        <div class="manual-input-item">
+                            <label>볼린저 하단 <span class="optional-mark">(지지선)</span></label>
+                            <input type="number" id="manualBBLower" placeholder="1441.45" step="0.01">
+                        </div>
                     </div>
                 </div>
-                <div class="timeframe-options">
-                    <button class="timeframe-btn" onclick="setTimeframe('5m',this)">5분</button>
-                    <button class="timeframe-btn" onclick="setTimeframe('15m',this)">15분</button>
-                    <button class="timeframe-btn active" onclick="setTimeframe('1h',this)">1시간</button>
-                    <button class="timeframe-btn" onclick="setTimeframe('4h',this)">4시간</button>
-                    <button class="timeframe-btn" onclick="setTimeframe('1d',this)">일봉</button>
+                
+                <div class="input-group">
+                    <div class="input-group-title">🎯 추세 방향</div>
+                    <div class="manual-input-grid">
+                        <div class="manual-input-item full">
+                            <label>추세 선택 <span class="required-mark">*</span></label>
+                            <select id="manualTrend">
+                                <option value="up">📈 상승 (가격이 올라가는 중)</option>
+                                <option value="down">📉 하락 (가격이 내려가는 중)</option>
+                                <option value="sideways">➡️ 횡보 (옆으로 이동 중)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="auto-calc-note">
+                    💡 저항선/지지선을 모르면 볼린저밴드 값으로 자동 계산돼요!<br>
+                    볼린저도 모르면 현재가 기준으로 계산해요.
+                </div>
+                
+                <button class="manual-analyze-btn" id="chartAnalyzeBtn" onclick="analyzeChart()" disabled>
+                    📊 차트 분석 시작
+                </button>
             </div>
             
             <div class="invest-section">
@@ -1242,10 +1048,44 @@
                 </div>
             </div>
             
-            <button class="analyze-btn" id="chartAnalyzeBtn" onclick="finalizeChartAnalysis()" disabled>
-                🤖 AI 분석 결과로 매매 가이드 받기
-                <span class="sub-text">차트를 업로드하거나 수동 입력하세요</span>
-            </button>
+            <!-- 분석 결과 미리보기 -->
+            <div class="ai-result-card" id="aiResultCard">
+                <div class="ai-result-header">
+                    <span style="font-size:1.5rem;">📊</span>
+                    <h4>기술적 분석 결과</h4>
+                    <span class="ai-badge">BB + RSI</span>
+                </div>
+                
+                <div class="ai-value-row">
+                    <span class="ai-value-label">현재가</span>
+                    <span class="ai-value" id="aiCurrentPrice">-</span>
+                </div>
+                <div class="ai-value-row">
+                    <span class="ai-value-label">1차 저항선</span>
+                    <span class="ai-value down" id="aiResistance1">-</span>
+                </div>
+                <div class="ai-value-row">
+                    <span class="ai-value-label">1차 지지선</span>
+                    <span class="ai-value up" id="aiSupport1">-</span>
+                </div>
+                <div class="ai-value-row">
+                    <span class="ai-value-label">RSI</span>
+                    <span class="ai-value" id="aiRSI">-</span>
+                </div>
+                <div class="ai-value-row">
+                    <span class="ai-value-label">RSI 상태</span>
+                    <span class="ai-value" id="aiRSIStatus">-</span>
+                </div>
+                <div class="ai-value-row">
+                    <span class="ai-value-label">추세 방향</span>
+                    <span class="ai-value" id="aiTrend">-</span>
+                </div>
+                
+                <div class="ai-comment">
+                    <div class="ai-comment-title">💬 분석 코멘트</div>
+                    <div class="ai-comment-text" id="aiComment">차트 데이터를 입력하면 분석 결과가 표시됩니다.</div>
+                </div>
+            </div>
         </div>
         
         <!-- 복합 분석 탭 -->
@@ -1254,7 +1094,7 @@
                 <div class="step-header">
                     <div class="step-number" style="background:linear-gradient(135deg,#00d4ff,#ff0080);">★</div>
                     <div class="step-title">
-                        <h3>🔥 NDF + AI 차트 복합</h3>
+                        <h3>🔥 NDF + 차트 복합</h3>
                         <p>두 분석을 결합한 최강 시그널</p>
                     </div>
                 </div>
@@ -1272,7 +1112,7 @@
                         <div style="font-size:1.8rem;color:#3a3a5a;">+</div>
                         <div style="text-align:center;">
                             <div id="chartCheck" style="font-size:1.8rem;">⬜</div>
-                            <div style="font-size:0.75rem;color:#8892b0;">AI차트</div>
+                            <div style="font-size:0.75rem;color:#8892b0;">차트</div>
                         </div>
                         <div style="font-size:1.8rem;color:#3a3a5a;">=</div>
                         <div style="text-align:center;">
@@ -1284,7 +1124,7 @@
                 
                 <button class="analyze-btn" id="combinedBtn" onclick="analyzeCombined()" disabled>
                     🔥 복합 분석 시작
-                    <span class="sub-text">NDF와 AI차트 분석을 먼저 완료하세요</span>
+                    <span class="sub-text">NDF와 차트 분석을 먼저 완료하세요</span>
                 </button>
             </div>
         </div>
@@ -1292,7 +1132,7 @@
         <!-- 결과 영역 -->
         <div class="result-area" id="resultArea">
             <div style="text-align:center;">
-                <span class="analysis-badge ai" id="analysisBadge">🤖 AI 차트 분석</span>
+                <span class="analysis-badge ai" id="analysisBadge">📊 차트 분석</span>
             </div>
             
             <div class="main-signal" id="mainSignal">
@@ -1322,7 +1162,7 @@
                         </div>
                     </div>
                     <div class="price-value">
-                        <div class="amount" id="entryPrice">1,455원</div>
+                        <div class="amount" id="entryPrice">1,468원</div>
                     </div>
                 </div>
                 
@@ -1335,8 +1175,8 @@
                         </div>
                     </div>
                     <div class="price-value">
-                        <div class="amount" id="targetPrice">1,470원</div>
-                        <div class="change positive" id="targetChange">+15원</div>
+                        <div class="amount" id="targetPrice">1,479원</div>
+                        <div class="change positive" id="targetChange">+11원</div>
                     </div>
                 </div>
                 
@@ -1349,8 +1189,8 @@
                         </div>
                     </div>
                     <div class="price-value">
-                        <div class="amount" id="stopPrice">1,440원</div>
-                        <div class="change negative" id="stopChange">-15원</div>
+                        <div class="amount" id="stopPrice">1,460원</div>
+                        <div class="change negative" id="stopChange">-8원</div>
                     </div>
                 </div>
             </div>
@@ -1358,12 +1198,12 @@
             <div class="profit-loss-row">
                 <div class="profit-card">
                     <h4>📈 예상 수익</h4>
-                    <div class="profit-amount" id="maxProfit">+10,000원</div>
+                    <div class="profit-amount" id="maxProfit">+7,500원</div>
                     <div class="profit-desc" id="profitDesc">목표가 도달 시</div>
                 </div>
                 <div class="loss-card">
                     <h4>📉 예상 손실</h4>
-                    <div class="loss-amount" id="maxLoss">-10,000원</div>
+                    <div class="loss-amount" id="maxLoss">-5,400원</div>
                     <div class="loss-desc">손절가 도달 시</div>
                 </div>
             </div>
@@ -1397,7 +1237,7 @@
                 <h3>📊 분석 데이터</h3>
                 <div class="data-row">
                     <span class="data-label">분석 유형</span>
-                    <span class="data-value" id="dataType">AI 차트</span>
+                    <span class="data-value" id="dataType">차트 분석</span>
                 </div>
                 <div class="data-row" id="dataNdfRow" style="display:none;">
                     <span class="data-label">NDF 갭</span>
@@ -1413,11 +1253,10 @@
                 </div>
             </div>
             
-            <div class="warning-box">
+            <div class="warning-box" id="warningBox">
                 <h4>⚠️ 주의사항</h4>
-                <ul class="warning-list">
+                <ul class="warning-list" id="warningList">
                     <li>기술적 분석은 100% 정확하지 않아요</li>
-                    <li>RSI 과매수 구간 - 단기 조정 가능성</li>
                     <li>손절가는 반드시 지켜주세요</li>
                     <li>투자 책임은 본인에게 있어요</li>
                 </ul>
@@ -1427,8 +1266,8 @@
         </div>
         
         <div class="footer">
-            <p>💱 FX 환율 AI 차트 분석 가이드</p>
-            <p>기술적 분석 기반 매매 신호</p>
+            <p>💱 FX 환율 차트 분석 가이드</p>
+            <p>볼린저밴드 + RSI 기반 매매 신호</p>
             <p style="margin-top:8px;">※ 투자 책임은 본인에게 있습니다</p>
         </div>
     </div>
@@ -1436,11 +1275,8 @@
     <script>
         // 전역 변수
         let currentTab = 'ndf';
-        let selectedTimeframe = '1h';
-        let uploadedImageBase64 = null;
         let ndfResult = null;
         let chartResult = null;
-        let aiAnalysisData = null;
         
         // 시계
         function updateClock() {
@@ -1507,6 +1343,15 @@
             document.getElementById('ndfAnalyzeBtn').disabled = !(prev>1000 && ndf>1000);
         }
         
+        // 차트 입력 체크
+        function checkChartInputs() {
+            const price = parseFloat(document.getElementById('manualCurrentPrice').value);
+            const rsi = parseFloat(document.getElementById('manualRSI').value);
+            
+            const isValid = price > 1000 && rsi >= 0 && rsi <= 100;
+            document.getElementById('chartAnalyzeBtn').disabled = !isValid;
+        }
+        
         // 투자금 설정
         function setInvestment(amount) {
             document.getElementById('investment').value = amount;
@@ -1515,325 +1360,16 @@
             event.target.classList.add('active');
         }
         
-        // 타임프레임
-        function setTimeframe(tf, el) {
-            selectedTimeframe = tf;
-            document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-        
-        // 차트 업로드
-        function handleChartUpload(e) {
-            const file = e.target.files[0];
-            if(!file || !file.type.startsWith('image/')) return;
+        // 샘플 데이터 채우기
+        function fillSampleData() {
+            document.getElementById('manualCurrentPrice').value = '1468.14';
+            document.getElementById('manualRSI').value = '73.65';
+            document.getElementById('manualBBUpper').value = '1478.77';
+            document.getElementById('manualBBLower').value = '1441.45';
+            document.getElementById('manualTrend').value = 'up';
+            checkChartInputs();
             
-            const reader = new FileReader();
-            reader.onload = async function(ev) {
-                uploadedImageBase64 = ev.target.result;
-                
-                document.getElementById('chartPreview').src = uploadedImageBase64;
-                document.getElementById('uploadArea').style.display = 'none';
-                document.getElementById('previewContainer').style.display = 'block';
-                document.getElementById('chartStatus').textContent = '분석중...';
-                document.getElementById('chartStatus').className = 'step-status analyzing';
-                
-                await analyzeChartWithAI(uploadedImageBase64);
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // URL에서 차트 불러오기
-        async function fetchChartFromUrl() {
-            const url = document.getElementById('chartUrl').value.trim();
-            if(!url) {
-                alert('이미지 URL을 입력해주세요.');
-                return;
-            }
-            
-            document.getElementById('chartStatus').textContent = '불러오는중...';
-            document.getElementById('chartStatus').className = 'step-status analyzing';
-            
-            try {
-                // URL로 직접 분석 시도
-                await analyzeChartWithAI(url);
-            } catch(err) {
-                console.error('URL 분석 오류:', err);
-                alert('이미지를 불러오거나 분석하는데 실패했습니다.\n직접 업로드하거나 수동 입력을 이용해주세요.');
-                document.getElementById('chartStatus').textContent = '오류';
-                document.getElementById('chartStatus').className = 'step-status error';
-            }
-        }
-        
-        function removeChart() {
-            uploadedImageBase64 = null;
-            aiAnalysisData = null;
-            document.getElementById('uploadArea').style.display = 'block';
-            document.getElementById('previewContainer').style.display = 'none';
-            document.getElementById('chartFile').value = '';
-            document.getElementById('chartUrl').value = '';
-            document.getElementById('chartStatus').textContent = '대기중';
-            document.getElementById('chartStatus').className = 'step-status pending';
-            document.getElementById('aiResultCard').classList.remove('show');
-            document.getElementById('timeframeCard').style.display = 'none';
-            document.getElementById('chartAnalyzeBtn').disabled = true;
-            updateCombinedCheck();
-        }
-        
-        // Pollinations.ai Vision API로 차트 분석
-        async function analyzeChartWithAI(imageData) {
-            const progress = document.getElementById('aiProgress');
-            progress.classList.add('show');
-            
-            // 단계 초기화
-            const steps = ['aiStep1','aiStep2','aiStep3','aiStep4'];
-            steps.forEach(s => {
-                document.getElementById(s).classList.remove('active','done');
-            });
-            
-            // 단계 애니메이션
-            let step = 0;
-            const interval = setInterval(() => {
-                if(step>0 && step<=4) {
-                    document.getElementById(steps[step-1]).classList.remove('active');
-                    document.getElementById(steps[step-1]).classList.add('done');
-                }
-                if(step<4) {
-                    document.getElementById(steps[step]).classList.add('active');
-                    step++;
-                }
-            }, 800);
-            
-            try {
-                // 이미지 데이터 준비
-                let imageUrl = imageData;
-                
-                // Pollinations.ai Vision API 호출
-                const response = await fetch('https://text.pollinations.ai/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        model: 'openai',
-                        messages: [{
-                            role: 'user',
-                            content: [
-                                {
-                                    type: 'text',
-                                    text: `You are an expert forex technical analyst. Analyze this USD/KRW chart image carefully.
-
-Look for these indicators if visible:
-- Current price (시가/현재가)
-- Bollinger Bands (BB) - upper, middle, lower bands
-- RSI value
-- MACD
-- Stochastic RSI
-- Support and resistance levels
-- Price trend direction
-
-RESPOND ONLY with this exact JSON format, no other text:
-{
-    "currentPrice": 1468,
-    "resistance1": 1479,
-    "resistance2": 1490,
-    "support1": 1460,
-    "support2": 1441,
-    "rsi": 73.6,
-    "stochRsi": 98.9,
-    "macd": 1.13,
-    "bbUpper": 1479,
-    "bbMiddle": 1460,
-    "bbLower": 1441,
-    "trend": "up",
-    "patterns": ["RSI 과매수", "볼린저밴드 상단 근접"],
-    "comment": "RSI와 Stochastic RSI가 모두 과매수 구간에 있어 단기 조정 가능성이 있습니다. 그러나 강한 상승 모멘텀이 유지되고 있어 추세는 상승 방향입니다."
-}
-
-Use null for values you cannot determine. Prices should be realistic USD/KRW rates (1100-1700 range). RSI range is 0-100.`
-                                },
-                                {
-                                    type: 'image_url',
-                                    image_url: { url: imageUrl }
-                                }
-                            ]
-                        }],
-                        max_tokens: 1000
-                    })
-                });
-                
-                clearInterval(interval);
-                steps.forEach(s => {
-                    document.getElementById(s).classList.remove('active');
-                    document.getElementById(s).classList.add('done');
-                });
-                
-                if(!response.ok) {
-                    throw new Error('API 오류: ' + response.status);
-                }
-                
-                const text = await response.text();
-                console.log('API Response:', text);
-                
-                let data;
-                try {
-                    data = JSON.parse(text);
-                    if(data.choices && data.choices[0] && data.choices[0].message) {
-                        const content = data.choices[0].message.content;
-                        const jsonMatch = content.match(/\{[\s\S]*\}/);
-                        if(jsonMatch) {
-                            data = JSON.parse(jsonMatch[0]);
-                        }
-                    }
-                } catch(parseErr) {
-                    // JSON 추출 시도
-                    const jsonMatch = text.match(/\{[\s\S]*\}/);
-                    if(jsonMatch) {
-                        data = JSON.parse(jsonMatch[0]);
-                    } else {
-                        throw new Error('JSON 파싱 실패');
-                    }
-                }
-                
-                aiAnalysisData = data;
-                
-                setTimeout(() => {
-                    progress.classList.remove('show');
-                    displayAIResult(data);
-                }, 500);
-                
-            } catch(err) {
-                clearInterval(interval);
-                console.error('AI Error:', err);
-                progress.classList.remove('show');
-                
-                document.getElementById('chartStatus').textContent = '수동입력 필요';
-                document.getElementById('chartStatus').className = 'step-status error';
-                
-                // 수동 입력 안내
-                alert('AI가 차트를 분석하지 못했습니다.\n\n아래 "차트 정보 수동 입력" 섹션에서\n차트에 표시된 값들을 직접 입력해주세요.\n\n현재가: 1468.14\nRSI: 73.65\n등의 값을 입력하시면 됩니다.');
-            }
-        }
-        
-        // AI 결과 표시
-        function displayAIResult(data) {
-            document.getElementById('aiCurrentPrice').textContent = data.currentPrice ? data.currentPrice.toLocaleString() + '원' : '-';
-            document.getElementById('aiResistance1').textContent = data.resistance1 ? data.resistance1.toLocaleString() + '원' : '-';
-            document.getElementById('aiResistance2').textContent = data.resistance2 ? data.resistance2.toLocaleString() + '원' : '-';
-            document.getElementById('aiSupport1').textContent = data.support1 ? data.support1.toLocaleString() + '원' : '-';
-            document.getElementById('aiSupport2').textContent = data.support2 ? data.support2.toLocaleString() + '원' : '-';
-            
-            // RSI 표시
-            const rsiEl = document.getElementById('aiRSI');
-            if(data.rsi) {
-                rsiEl.textContent = data.rsi.toFixed(1);
-                if(data.rsi > 70) {
-                    rsiEl.className = 'ai-value overbought';
-                    rsiEl.textContent += ' (과매수)';
-                } else if(data.rsi < 30) {
-                    rsiEl.className = 'ai-value oversold';
-                    rsiEl.textContent += ' (과매도)';
-                } else {
-                    rsiEl.className = 'ai-value neutral';
-                }
-            } else {
-                rsiEl.textContent = '-';
-            }
-            
-            const trendMap = { up: '📈 상승', down: '📉 하락', sideways: '➡️ 횡보' };
-            const trendEl = document.getElementById('aiTrend');
-            trendEl.textContent = trendMap[data.trend] || data.trend || '-';
-            trendEl.className = 'ai-value ' + (data.trend==='up'?'up':data.trend==='down'?'down':'neutral');
-            
-            document.getElementById('aiPatterns').textContent = data.patterns ? data.patterns.join(', ') : '-';
-            document.getElementById('aiComment').textContent = data.comment || 'AI 분석이 완료되었습니다.';
-            
-            document.getElementById('aiResultCard').classList.add('show');
-            document.getElementById('timeframeCard').style.display = 'block';
-            document.getElementById('chartStatus').textContent = '완료 ✓';
-            document.getElementById('chartStatus').className = 'step-status done';
-            document.getElementById('chartAnalyzeBtn').disabled = false;
-            
-            // 프리뷰에 URL 이미지 표시
-            if(!uploadedImageBase64 && document.getElementById('chartUrl').value) {
-                document.getElementById('chartPreview').src = document.getElementById('chartUrl').value;
-                document.getElementById('uploadArea').style.display = 'none';
-                document.getElementById('previewContainer').style.display = 'block';
-            }
-            
-            updateCombinedCheck();
-        }
-        
-        // 수동 입력 분석
-        function analyzeManualInput() {
-            const currentPrice = parseFloat(document.getElementById('manualCurrentPrice').value);
-            const rsi = parseFloat(document.getElementById('manualRSI').value);
-            const bbUpper = parseFloat(document.getElementById('manualBBUpper').value);
-            const bbLower = parseFloat(document.getElementById('manualBBLower').value);
-            const resistance1 = parseFloat(document.getElementById('manualResistance1').value);
-            const support1 = parseFloat(document.getElementById('manualSupport1').value);
-            const trend = document.getElementById('manualTrend').value;
-            
-            if(!currentPrice || currentPrice < 1000) {
-                alert('현재가를 정확히 입력해주세요. (예: 1468.14)');
-                return;
-            }
-            
-            // 패턴 자동 감지
-            const patterns = [];
-            if(rsi > 70) patterns.push('RSI 과매수');
-            if(rsi < 30) patterns.push('RSI 과매도');
-            if(bbUpper && currentPrice > bbUpper * 0.99) patterns.push('볼린저밴드 상단 근접');
-            if(bbLower && currentPrice < bbLower * 1.01) patterns.push('볼린저밴드 하단 근접');
-            if(trend === 'up') patterns.push('상승 추세');
-            if(trend === 'down') patterns.push('하락 추세');
-            
-            // 코멘트 생성
-            let comment = '';
-            if(rsi > 70) {
-                comment = 'RSI가 과매수 구간에 있어 단기 조정 가능성이 있습니다. ';
-            } else if(rsi < 30) {
-                comment = 'RSI가 과매도 구간에 있어 반등 가능성이 있습니다. ';
-            }
-            
-            if(trend === 'up') {
-                comment += '전반적인 추세는 상승 방향입니다.';
-            } else if(trend === 'down') {
-                comment += '전반적인 추세는 하락 방향입니다.';
-            } else {
-                comment += '현재 횡보 구간으로 방향 대기 중입니다.';
-            }
-            
-            // 데이터 구성
-            aiAnalysisData = {
-                currentPrice: currentPrice,
-                resistance1: resistance1 || bbUpper || currentPrice * 1.007,
-                resistance2: (resistance1 || bbUpper || currentPrice * 1.007) * 1.007,
-                support1: support1 || bbLower || currentPrice * 0.993,
-                support2: (support1 || bbLower || currentPrice * 0.993) * 0.993,
-                rsi: rsi || null,
-                bbUpper: bbUpper || null,
-                bbMiddle: bbUpper && bbLower ? (bbUpper + bbLower) / 2 : null,
-                bbLower: bbLower || null,
-                trend: trend,
-                patterns: patterns.length > 0 ? patterns : ['수동 입력 데이터'],
-                comment: comment || '수동으로 입력된 데이터를 기반으로 분석했습니다.'
-            };
-            
-            displayAIResult(aiAnalysisData);
-            
-            document.getElementById('chartStatus').textContent = '수동입력 완료';
-            document.getElementById('chartStatus').className = 'step-status done';
-        }
-        
-        // 복합 분석 체크
-        function updateCombinedCheck() {
-            const ndfDone = ndfResult !== null;
-            const chartDone = aiAnalysisData !== null;
-            
-            document.getElementById('ndfCheck').textContent = ndfDone ? '✅' : '⬜';
-            document.getElementById('chartCheck').textContent = chartDone ? '✅' : '⬜';
-            
-            const btn = document.getElementById('combinedBtn');
-            btn.disabled = !(ndfDone && chartDone);
-            btn.querySelector('.sub-text').textContent = (ndfDone && chartDone) ? '준비 완료!' : 'NDF와 AI차트 분석을 먼저 완료하세요';
+            alert('샘플 데이터가 입력되었어요!\n\n이 데이터는 업로드하신 차트 기준입니다.\n현재가: 1468.14원\nRSI: 73.65 (과매수)\n볼린저 상단: 1478.77원\n볼린저 하단: 1441.45원\n추세: 상승\n\n"차트 분석 시작" 버튼을 눌러주세요!');
         }
         
         // NDF 분석
@@ -1915,126 +1451,249 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
             displayResult(ndfResult);
         }
         
-        // 차트 분석 최종화
-        function finalizeChartAnalysis() {
-            if(!aiAnalysisData) {
-                alert('차트를 먼저 업로드하거나 수동 입력해주세요.');
+        // 차트 분석
+        function analyzeChart() {
+            const currentPrice = parseFloat(document.getElementById('manualCurrentPrice').value);
+            const rsi = parseFloat(document.getElementById('manualRSI').value);
+            const bbUpper = parseFloat(document.getElementById('manualBBUpper').value) || null;
+            const bbLower = parseFloat(document.getElementById('manualBBLower').value) || null;
+            const trend = document.getElementById('manualTrend').value;
+            const investment = parseFloat(document.getElementById('investmentChart').value) || 1000000;
+            
+            if(!currentPrice || currentPrice < 1000) {
+                alert('현재가를 정확히 입력해주세요. (예: 1468.14)');
                 return;
             }
             
-            const data = aiAnalysisData;
-            const investment = parseFloat(document.getElementById('investmentChart').value) || 1000000;
+            if(rsi < 0 || rsi > 100) {
+                alert('RSI는 0~100 사이 값을 입력해주세요.');
+                return;
+            }
             
+            // 저항선/지지선 자동 계산
+            let resistance1, support1;
+            
+            if(bbUpper) {
+                resistance1 = bbUpper;
+            } else {
+                resistance1 = currentPrice * 1.007; // 현재가 대비 +0.7%
+            }
+            
+            if(bbLower) {
+                support1 = bbLower;
+            } else {
+                support1 = currentPrice * 0.993; // 현재가 대비 -0.7%
+            }
+            
+            // 중간 지지선 (볼린저 중심선 개념)
+            const bbMiddle = (resistance1 + support1) / 2;
+            
+            // RSI 상태 판단
+            let rsiStatus, rsiStatusClass;
+            if(rsi >= 80) {
+                rsiStatus = '🔴 극단적 과매수';
+                rsiStatusClass = 'down';
+            } else if(rsi >= 70) {
+                rsiStatus = '🟠 과매수';
+                rsiStatusClass = 'down';
+            } else if(rsi <= 20) {
+                rsiStatus = '🟢 극단적 과매도';
+                rsiStatusClass = 'up';
+            } else if(rsi <= 30) {
+                rsiStatus = '🟡 과매도';
+                rsiStatusClass = 'up';
+            } else {
+                rsiStatus = '⚪ 중립';
+                rsiStatusClass = 'neutral';
+            }
+            
+            // 결과 미리보기 표시
+            document.getElementById('aiCurrentPrice').textContent = currentPrice.toLocaleString() + '원';
+            document.getElementById('aiResistance1').textContent = resistance1.toFixed(0) + '원';
+            document.getElementById('aiSupport1').textContent = support1.toFixed(0) + '원';
+            document.getElementById('aiRSI').textContent = rsi.toFixed(1);
+            document.getElementById('aiRSI').className = 'ai-value ' + rsiStatusClass;
+            document.getElementById('aiRSIStatus').textContent = rsiStatus;
+            document.getElementById('aiRSIStatus').className = 'ai-value ' + rsiStatusClass;
+            
+            const trendMap = { up: '📈 상승', down: '📉 하락', sideways: '➡️ 횡보' };
+            document.getElementById('aiTrend').textContent = trendMap[trend];
+            document.getElementById('aiTrend').className = 'ai-value ' + (trend==='up'?'up':trend==='down'?'down':'neutral');
+            
+            // 코멘트 생성
+            let comment = '';
+            if(rsi >= 70 && trend === 'up') {
+                comment = `RSI ${rsi.toFixed(1)}로 과매수 상태예요. 상승 추세지만 단기 조정 가능성이 높아서 신규 진입보다는 관망을 추천해요.`;
+            } else if(rsi >= 70 && trend !== 'up') {
+                comment = `RSI ${rsi.toFixed(1)}로 과매수 상태이고 추세도 약해요. 하락 반전 가능성을 주의하세요.`;
+            } else if(rsi <= 30 && trend === 'down') {
+                comment = `RSI ${rsi.toFixed(1)}로 과매도 상태예요. 하락 추세지만 반등 가능성이 있어서 신규 매도보다는 관망을 추천해요.`;
+            } else if(rsi <= 30 && trend !== 'down') {
+                comment = `RSI ${rsi.toFixed(1)}로 과매도 상태이고 반등 신호가 있어요. 저점 매수 기회일 수 있어요.`;
+            } else if(trend === 'up') {
+                comment = `상승 추세에 RSI ${rsi.toFixed(1)}로 아직 과매수 아니에요. 추세 추종 매수 전략이 유효해요.`;
+            } else if(trend === 'down') {
+                comment = `하락 추세에 RSI ${rsi.toFixed(1)}예요. 추세 추종 매도 전략이 유효해요.`;
+            } else {
+                comment = `횡보 구간에 RSI ${rsi.toFixed(1)}예요. 방향이 정해질 때까지 관망하는 게 안전해요.`;
+            }
+            
+            document.getElementById('aiComment').textContent = comment;
+            document.getElementById('aiResultCard').classList.add('show');
+            
+            // 매매 신호 결정
             let signal, signalClass, signalIcon, signalTitle, signalDesc;
             let entryPrice, targetPrice, stopPrice;
             let strategies = [];
             let confidence = 60;
+            let warnings = [];
             
-            const trend = data.trend || 'sideways';
-            const rsi = data.rsi || 50;
-            entryPrice = data.currentPrice || 1468;
+            entryPrice = currentPrice;
             
             // RSI 기반 신호 조정
-            let rsiSignal = 'neutral';
-            if(rsi > 70) rsiSignal = 'overbought';
-            if(rsi < 30) rsiSignal = 'oversold';
-            
-            if(trend === 'up') {
-                if(rsi > 80) {
-                    // 과매수 상태에서 상승 추세 - 주의 필요
-                    signal = 'HOLD';
-                    signalClass = 'hold';
-                    signalIcon = '⚠️';
-                    signalTitle = '관망 (과매수)';
-                    signalDesc = '🤖 상승 추세지만 RSI 과매수! 조정 가능';
-                    targetPrice = data.resistance1 || entryPrice*1.005;
-                    stopPrice = data.support1 || entryPrice*0.99;
-                    confidence = 45;
-                    strategies = [
-                        {title:'신규 진입 보류', desc:`RSI ${rsi.toFixed(1)}로 과매수 상태. 조정 후 진입`},
-                        {title:'기존 포지션 일부 정리', desc:'목표가 근처에서 수익 실현 고려'},
-                        {title:`지지선 ${(data.support1 || entryPrice*0.99).toFixed(0)}원 주시`, desc:'이탈 시 추가 하락 가능'}
-                    ];
-                } else {
-                    signal = 'SELL_KRW';
-                    signalClass = 'sell-krw';
-                    signalIcon = '🟢';
-                    signalTitle = '원화 매도';
-                    signalDesc = '🤖 AI: 상승 추세! 달러 매수';
-                    targetPrice = data.resistance1 || entryPrice*1.01;
-                    stopPrice = data.support1 || entryPrice*0.995;
-                    confidence = 70;
-                    strategies = [
-                        {title:`현재가 ${entryPrice.toFixed(0)}원 근처 진입`, desc:'상승 추세 활용'},
-                        {title:`저항선 ${(data.resistance1 || entryPrice*1.01).toFixed(0)}원에서 절반 정리`, desc:'1차 목표가 도달 시 수익 실현'},
-                        {title:`지지선 ${(data.support1 || entryPrice*0.995).toFixed(0)}원 이탈 시 손절`, desc:'손실 제한 필수'}
-                    ];
-                }
-            } else if(trend === 'down') {
-                if(rsi < 20) {
-                    signal = 'HOLD';
-                    signalClass = 'hold';
-                    signalIcon = '⚠️';
-                    signalTitle = '관망 (과매도)';
-                    signalDesc = '🤖 하락 추세지만 RSI 과매도! 반등 가능';
-                    targetPrice = data.support1 || entryPrice*0.995;
-                    stopPrice = data.resistance1 || entryPrice*1.01;
-                    confidence = 45;
-                    strategies = [
-                        {title:'신규 매도 보류', desc:`RSI ${rsi.toFixed(1)}로 과매도. 반등 가능`},
-                        {title:'기존 숏포지션 일부 정리', desc:'과매도 구간에서 수익 실현 고려'},
-                        {title:`저항선 ${(data.resistance1 || entryPrice*1.01).toFixed(0)}원 돌파 주시`, desc:'돌파 시 추세 전환 가능'}
-                    ];
-                } else {
-                    signal = 'BUY_KRW';
-                    signalClass = 'buy-krw';
-                    signalIcon = '🔴';
-                    signalTitle = '원화 매수';
-                    signalDesc = '🤖 AI: 하락 추세! 달러 매도';
-                    targetPrice = data.support1 || entryPrice*0.99;
-                    stopPrice = data.resistance1 || entryPrice*1.005;
-                    confidence = 70;
-                    strategies = [
-                        {title:`현재가 ${entryPrice.toFixed(0)}원 근처 진입`, desc:'하락 추세 활용'},
-                        {title:`지지선 ${(data.support1 || entryPrice*0.99).toFixed(0)}원에서 절반 정리`, desc:'1차 목표가 도달 시 수익 실현'},
-                        {title:`저항선 ${(data.resistance1 || entryPrice*1.005).toFixed(0)}원 돌파 시 손절`, desc:'손실 제한 필수'}
-                    ];
-                }
+            if(rsi >= 80) {
+                // 극단적 과매수 - 무조건 관망 또는 매도
+                signal = 'HOLD';
+                signalClass = 'hold';
+                signalIcon = '⚠️';
+                signalTitle = '관망 (과매수)';
+                signalDesc = 'RSI 80 이상! 조정 가능성 높음';
+                targetPrice = resistance1;
+                stopPrice = bbMiddle;
+                confidence = 40;
+                strategies = [
+                    {title:'🚫 신규 진입 금지', desc:`RSI ${rsi.toFixed(1)}는 극단적 과매수. 조정 후 진입`},
+                    {title:'기존 포지션 정리 고려', desc:'고점 근처에서 수익 실현'},
+                    {title:`지지선 ${bbMiddle.toFixed(0)}원 주시`, desc:'이 가격 이탈 시 추가 하락 가능'}
+                ];
+                warnings = ['RSI 80 이상 극단적 과매수 상태', '단기 조정 가능성 매우 높음', '신규 매수 진입 자제 권장'];
+            } else if(rsi >= 70 && trend === 'up') {
+                // 과매수 + 상승추세 - 주의하며 관망
+                signal = 'HOLD';
+                signalClass = 'hold';
+                signalIcon = '⚠️';
+                signalTitle = '관망 (주의)';
+                signalDesc = '상승 추세지만 RSI 과매수! 조정 가능';
+                targetPrice = resistance1;
+                stopPrice = bbMiddle;
+                confidence = 45;
+                strategies = [
+                    {title:'신규 진입 보류', desc:`RSI ${rsi.toFixed(1)}로 과매수 구간. 조정 후 진입 추천`},
+                    {title:'기존 포지션 일부 정리', desc:`저항선 ${resistance1.toFixed(0)}원 근처에서 수익 실현`},
+                    {title:`중심선 ${bbMiddle.toFixed(0)}원에서 재진입 검토`, desc:'조정 후 지지 확인되면 재진입'}
+                ];
+                warnings = ['RSI 70 이상 과매수 구간', '상승 추세지만 단기 조정 가능', '신규 진입시 소액으로'];
+            } else if(rsi <= 20) {
+                // 극단적 과매도 - 반등 기대
+                signal = 'SELL_KRW';
+                signalClass = 'sell-krw';
+                signalIcon = '🟢';
+                signalTitle = '원화 매도';
+                signalDesc = 'RSI 극단적 과매도! 반등 기대';
+                targetPrice = bbMiddle;
+                stopPrice = support1 * 0.995;
+                confidence = 65;
+                strategies = [
+                    {title:`현재가 ${currentPrice.toFixed(0)}원 근처 분할 매수`, desc:'극단적 과매도는 반등 확률 높음'},
+                    {title:`중심선 ${bbMiddle.toFixed(0)}원에서 절반 정리`, desc:'1차 목표가에서 수익 실현'},
+                    {title:`손절가 ${(support1 * 0.995).toFixed(0)}원 준수`, desc:'지지선 이탈 시 손절'}
+                ];
+                warnings = ['반등 기대하지만 추세 확인 필요', '분할 매수로 리스크 분산', '손절가 반드시 준수'];
+            } else if(rsi <= 30 && trend !== 'down') {
+                // 과매도 + 하락추세 아님 - 반등 기회
+                signal = 'SELL_KRW';
+                signalClass = 'sell-krw';
+                signalIcon = '🟢';
+                signalTitle = '원화 매도';
+                signalDesc = 'RSI 과매도 + 추세 전환 기대';
+                targetPrice = bbMiddle;
+                stopPrice = support1;
+                confidence = 60;
+                strategies = [
+                    {title:`현재가 ${currentPrice.toFixed(0)}원 근처 진입`, desc:'과매도 구간에서 반등 노리기'},
+                    {title:`중심선 ${bbMiddle.toFixed(0)}원에서 절반 정리`, desc:'1차 목표가'},
+                    {title:`지지선 ${support1.toFixed(0)}원 이탈 시 손절`, desc:'추가 하락 방어'}
+                ];
+                warnings = ['과매도 반등 기대', '추세 확인 후 추가 진입 검토', '분할 매수 권장'];
+            } else if(trend === 'up' && rsi < 70) {
+                // 상승추세 + RSI 양호 - 매수
+                signal = 'SELL_KRW';
+                signalClass = 'sell-krw';
+                signalIcon = '🟢';
+                signalTitle = '원화 매도';
+                signalDesc = '상승 추세! 달러 매수 추천';
+                targetPrice = resistance1;
+                stopPrice = bbMiddle;
+                confidence = 70;
+                strategies = [
+                    {title:`현재가 ${currentPrice.toFixed(0)}원 근처 진입`, desc:'상승 추세 활용'},
+                    {title:`저항선 ${resistance1.toFixed(0)}원에서 절반 정리`, desc:'볼린저 상단에서 수익 실현'},
+                    {title:`중심선 ${bbMiddle.toFixed(0)}원 이탈 시 손절`, desc:'추세 이탈 시 손절'}
+                ];
+                warnings = ['상승 추세 추종 전략', '저항선 돌파 여부 주시', '손절가 준수'];
+            } else if(trend === 'down' && rsi > 30) {
+                // 하락추세 + RSI 양호 - 매도
+                signal = 'BUY_KRW';
+                signalClass = 'buy-krw';
+                signalIcon = '🔴';
+                signalTitle = '원화 매수';
+                signalDesc = '하락 추세! 달러 매도 추천';
+                targetPrice = support1;
+                stopPrice = bbMiddle;
+                confidence = 70;
+                strategies = [
+                    {title:`현재가 ${currentPrice.toFixed(0)}원 근처 진입`, desc:'하락 추세 활용'},
+                    {title:`지지선 ${support1.toFixed(0)}원에서 절반 정리`, desc:'볼린저 하단에서 수익 실현'},
+                    {title:`중심선 ${bbMiddle.toFixed(0)}원 돌파 시 손절`, desc:'추세 이탈 시 손절'}
+                ];
+                warnings = ['하락 추세 추종 전략', '지지선 이탈 여부 주시', '손절가 준수'];
             } else {
+                // 횡보 - 관망
                 signal = 'HOLD';
                 signalClass = 'hold';
                 signalIcon = '🟡';
                 signalTitle = '관망';
-                signalDesc = '🤖 AI: 방향 불분명. 대기 권장';
-                targetPrice = entryPrice + 5;
-                stopPrice = entryPrice - 5;
-                confidence = 40;
+                signalDesc = '방향 불분명. 대기 권장';
+                targetPrice = resistance1;
+                stopPrice = support1;
+                confidence = 35;
                 strategies = [
-                    {title:'명확한 방향 대기', desc:'횡보 구간은 진입 리스크 높음'},
-                    {title:'지지/저항 돌파 확인 후 진입', desc:'돌파 방향으로 따라가기'},
-                    {title:'무리한 진입 금지', desc:'횡보 시 손실 확률 높음'}
+                    {title:'방향 결정 대기', desc:'횡보 구간은 진입 리스크 높음'},
+                    {title:`저항선 ${resistance1.toFixed(0)}원 돌파 시 매수`, desc:'상향 돌파 확인 후 진입'},
+                    {title:`지지선 ${support1.toFixed(0)}원 이탈 시 매도`, desc:'하향 이탈 확인 후 진입'}
                 ];
+                warnings = ['횡보 구간 - 방향성 불분명', '섣부른 진입 자제', '돌파 확인 후 진입 권장'];
             }
             
             chartResult = {
                 type:'chart', signal, signalClass, signalIcon, signalTitle, signalDesc,
                 entryPrice, targetPrice, stopPrice, strategies, confidence,
-                aiData: data, investment, timeframe: selectedTimeframe, rsi
+                currentPrice, rsi, resistance1, support1, bbMiddle, trend,
+                investment, warnings
             };
             
             updateCombinedCheck();
             displayResult(chartResult);
         }
         
+        // 복합 분석 체크
+        function updateCombinedCheck() {
+            const ndfDone = ndfResult !== null;
+            const chartDone = chartResult !== null;
+            
+            document.getElementById('ndfCheck').textContent = ndfDone ? '✅' : '⬜';
+            document.getElementById('chartCheck').textContent = chartDone ? '✅' : '⬜';
+            
+            const btn = document.getElementById('combinedBtn');
+            btn.disabled = !(ndfDone && chartDone);
+            btn.querySelector('.sub-text').textContent = (ndfDone && chartDone) ? '준비 완료!' : 'NDF와 차트 분석을 먼저 완료하세요';
+        }
+        
         // 복합 분석
         function analyzeCombined() {
-            if(!ndfResult || !aiAnalysisData) {
-                alert('NDF와 AI차트 분석을 먼저 완료해주세요.');
+            if(!ndfResult || !chartResult) {
+                alert('NDF와 차트 분석을 먼저 완료해주세요.');
                 return;
-            }
-            
-            if(!chartResult) {
-                finalizeChartAnalysis();
             }
             
             const ndf = ndfResult;
@@ -2045,13 +1704,14 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
             let entryPrice, targetPrice, stopPrice;
             let strategies = [];
             let confidence;
+            let warnings = [];
             
             if(signalsMatch && ndf.signal !== 'HOLD') {
                 signal = ndf.signal;
                 signalClass = ndf.signalClass;
                 signalIcon = ndf.signalIcon;
                 signalTitle = ndf.signalTitle;
-                signalDesc = '🔥 NDF + AI 시그널 일치! 강력 추천';
+                signalDesc = '🔥 NDF + 차트 시그널 일치! 강력 추천';
                 
                 entryPrice = chart.entryPrice;
                 if(signal === 'SELL_KRW') {
@@ -2065,16 +1725,17 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
                 confidence = Math.min(95, (ndf.confidence + chart.confidence)/2 + 15);
                 
                 strategies = [
-                    {title:'✨ 두 시그널 일치!', desc:`NDF와 AI 모두 ${signalTitle}. 적극 진입 가능`},
+                    {title:'✨ 두 시그널 일치!', desc:`NDF와 차트 모두 ${signalTitle}. 적극 진입 가능`},
                     {title:`보수적 목표가 ${targetPrice.toFixed(0)}원`, desc:'두 분석 중 가까운 목표로 안전하게'},
                     {title:`안전 손절가 ${stopPrice.toFixed(0)}원`, desc:'두 분석 중 안전한 손절선'}
                 ];
+                warnings = ['시그널 일치로 신뢰도 높음', '그래도 손절가는 반드시 준수', '과도한 레버리지 자제'];
             } else if(signalsMatch && ndf.signal === 'HOLD') {
                 signal = 'HOLD';
                 signalClass = 'hold';
                 signalIcon = '🟡';
                 signalTitle = '관망';
-                signalDesc = 'NDF와 AI 모두 방향 불분명';
+                signalDesc = 'NDF와 차트 모두 방향 불분명';
                 entryPrice = chart.entryPrice;
                 targetPrice = entryPrice + 5;
                 stopPrice = entryPrice - 5;
@@ -2084,28 +1745,32 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
                     {title:'오후 추이 관찰', desc:'명확한 방향이 나올 때까지 대기'},
                     {title:'내일 다시 분석', desc:'무리한 진입보다 기다림이 수익'}
                 ];
+                warnings = ['양쪽 모두 관망 신호', '무리한 진입 금지', '다음 기회를 노리세요'];
             } else {
                 // 시그널 불일치 - NDF 우선하되 주의
                 signal = ndf.signal;
                 signalClass = ndf.signalClass;
                 signalIcon = '⚠️';
                 signalTitle = ndf.signalTitle + ' (주의)';
-                signalDesc = '⚠️ NDF와 AI 시그널 불일치! 신중하게';
+                signalDesc = '⚠️ NDF와 차트 시그널 불일치! 신중하게';
                 entryPrice = chart.entryPrice;
                 targetPrice = ndf.targetPrice;
-                stopPrice = Math.max(ndf.stopPrice, chart.stopPrice);
+                stopPrice = (ndf.signal === 'SELL_KRW') 
+                    ? Math.max(ndf.stopPrice, chart.stopPrice)
+                    : Math.min(ndf.stopPrice, chart.stopPrice);
                 confidence = Math.min(55, (ndf.confidence + chart.confidence)/2 - 10);
                 strategies = [
                     {title:'⚠️ 소액으로 테스트', desc:'시그널 불일치. 평소보다 적게 진입'},
-                    {title:'NDF 방향 우선', desc:`NDF=${ndf.signalTitle}, AI=${chart.signalTitle}`},
+                    {title:'NDF 방향 우선', desc:`NDF=${ndf.signalTitle}, 차트=${chart.signalTitle}`},
                     {title:'타이트한 손절', desc:`${stopPrice.toFixed(0)}원에서 빠르게 손절`}
                 ];
+                warnings = ['NDF와 차트 신호 불일치', '소액 진입 또는 관망 권장', '타이트한 손절 필수'];
             }
             
             const result = {
                 type:'combined', signal, signalClass, signalIcon, signalTitle, signalDesc,
                 entryPrice, targetPrice, stopPrice, strategies, confidence,
-                ndf, chart, signalsMatch, rsi: chart.rsi
+                ndf, chart, signalsMatch, rsi: chart.rsi, warnings
             };
             
             displayResult(result);
@@ -2122,10 +1787,10 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
                 badge.innerHTML = '📊 NDF 분석';
             } else if(result.type === 'chart') {
                 badge.className = 'analysis-badge ai';
-                badge.innerHTML = '🤖 AI 차트 분석';
+                badge.innerHTML = '📈 차트 분석';
             } else {
                 badge.className = 'analysis-badge combined';
-                badge.innerHTML = '🔥 NDF + AI 복합';
+                badge.innerHTML = '🔥 NDF + 차트 복합';
             }
             
             // 메인 시그널
@@ -2169,7 +1834,7 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
             });
             
             // 데이터 요약
-            const typeMap = {ndf:'NDF 분석', chart:'AI 차트', combined:'복합 분석'};
+            const typeMap = {ndf:'NDF 분석', chart:'차트 분석', combined:'복합 분석'};
             document.getElementById('dataType').textContent = typeMap[result.type];
             
             if(result.type === 'ndf' || result.type === 'combined') {
@@ -2183,8 +1848,8 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
             }
             
             // RSI 표시
-            if(result.rsi || result.aiData?.rsi || result.chart?.rsi) {
-                const rsi = result.rsi || result.aiData?.rsi || result.chart?.rsi;
+            if(result.rsi || result.chart?.rsi) {
+                const rsi = result.rsi || result.chart?.rsi;
                 document.getElementById('dataRsiRow').style.display = 'flex';
                 const rsiEl = document.getElementById('dataRsi');
                 rsiEl.textContent = rsi.toFixed(1);
@@ -2213,6 +1878,16 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
                 dir.className = 'data-value';
             }
             
+            // 경고 메시지 업데이트
+            const warningList = document.getElementById('warningList');
+            warningList.innerHTML = '';
+            const warnings = result.warnings || ['기술적 분석은 100% 정확하지 않아요', '손절가는 반드시 지켜주세요', '투자 책임은 본인에게 있어요'];
+            warnings.forEach(w => {
+                const li = document.createElement('li');
+                li.textContent = w;
+                warningList.appendChild(li);
+            });
+            
             document.getElementById('resultArea').classList.add('show');
             document.getElementById('mainSignal').scrollIntoView({behavior:'smooth', block:'start'});
         }
@@ -2228,34 +1903,21 @@ Use null for values you cannot determine. Prices should be realistic USD/KRW rat
             document.getElementById('step2Status').className = 'step-status pending';
             document.getElementById('ndfAnalyzeBtn').disabled = true;
             
-            removeChart();
-            
-            // 수동 입력 초기화
+            // 차트 입력 초기화
             document.getElementById('manualCurrentPrice').value = '';
             document.getElementById('manualRSI').value = '';
             document.getElementById('manualBBUpper').value = '';
             document.getElementById('manualBBLower').value = '';
-            document.getElementById('manualResistance1').value = '';
-            document.getElementById('manualSupport1').value = '';
+            document.getElementById('manualTrend').value = 'up';
+            document.getElementById('chartAnalyzeBtn').disabled = true;
+            document.getElementById('aiResultCard').classList.remove('show');
             
             ndfResult = null;
             chartResult = null;
-            aiAnalysisData = null;
             updateCombinedCheck();
             
             window.scrollTo({top:0, behavior:'smooth'});
         }
-        
-        // 페이지 로드 시 샘플 데이터 제안 (업로드된 차트 기준)
-        window.addEventListener('DOMContentLoaded', function() {
-            // 샘플 차트 데이터를 수동 입력 필드에 힌트로 표시
-            document.getElementById('manualCurrentPrice').placeholder = '1468.14';
-            document.getElementById('manualRSI').placeholder = '73.65';
-            document.getElementById('manualBBUpper').placeholder = '1478.77';
-            document.getElementById('manualBBLower').placeholder = '1441.45';
-            document.getElementById('manualResistance1').placeholder = '1479';
-            document.getElementById('manualSupport1').placeholder = '1460';
-        });
     </script>
 </body>
 </html>
